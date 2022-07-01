@@ -1,0 +1,78 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipex.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/01 11:01:44 by jcourtoi          #+#    #+#             */
+/*   Updated: 2022/07/01 17:34:12 by jcourtoi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../pipex.h"
+
+int	ft_open(int ac, char **av, t_cmd *cmd, char **envp)
+{
+	int	err;
+
+	cmd->in = -2;
+	cmd->out = -2;
+	open_out(cmd, av);
+	cmd->in = open(av[1], O_RDONLY);
+	if (cmd->in == -1)
+		ft_printf("%s: %s: %s\n", SH, av[1], strerror(errno));
+	if (get_env(cmd, envp))
+		return (-1);
+	err = check_args(ac, av, cmd);
+	if (err == 127)
+		return (close_files(cmd), close_parent(), 127);
+	else if (err)
+		return (close_files(cmd), close_parent(), -2);
+	return (0);
+}
+
+int	pipex(t_cmd cmd, char **av)
+{
+	if (pipe(cmd.fd) < 0)
+		return (free_file(cmd.env), 3);
+	if ((cmd.in > -1))
+	{
+		cmd.pid1 = fork();
+		if (cmd.pid1 < 0)
+			return (4);
+		if (cmd.pid1 == 0)
+			child_process_one(&cmd, av);
+	}
+	cmd.pid2 = fork();
+	if (cmd.pid2 < 0)
+		return (5);
+	if (cmd.pid2 == 0)
+		child_process_two(&cmd, av);
+	close_fd(&cmd);
+	close_files(&cmd);
+	if (cmd.in > -1)
+		waitpid(cmd.pid1, NULL, 0);
+	waitpid(cmd.pid2, NULL, 0);
+	return (free_file(cmd.env), 0);
+}
+
+int	main(int ac, char **av, char **en)
+{
+	t_cmd	cmd;
+	int		err;
+
+	if (ac != 5)
+	{
+		ft_printf("5 args expected <./pipex infile cmd1 cmd2 outfile>\n");
+		return (close_parent(), 1);
+	}
+	err = ft_open(ac, av, &cmd, en);
+	if (err == 127)
+		return (127);
+	if (err < 0)
+		return (2);
+	if (pipex(cmd, av))
+		return (3);
+	return (close_parent(), 0);
+}
