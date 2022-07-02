@@ -92,6 +92,8 @@ char	*get_path(char *cmd, char **en, int msg, int n)
 		return (NULL);
 	while (en[i])
 	{
+		if (!check_path_cmd(cmd, 0))
+			return (cmd);
 		tmp = ft_strjoin(en[i], "/");
 		cmd_path = ft_strjoin(tmp, cmd);
 		free(tmp);
