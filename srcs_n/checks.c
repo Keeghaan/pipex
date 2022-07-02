@@ -47,25 +47,12 @@ int	check_cmd(int n, char *av, t_cmd *cmd)
 
 int	check_path_cmd(char *cmd, int msg)
 {
-	int	digit;
-	int	i;
-
-	digit = 0;
-	i = 0;
 	if (ft_strchr(cmd, '/'))
 	{
 		if (access(cmd, 0) == 0)
 			return (0);
-		while (cmd[i] && msg)
-		{
-			if (ft_isdigit(cmd[i]))
-				digit = 1;
-			i++;
-		}
-		if (digit)
-			ft_printf("%s: %s\n", cmd, CMDERR);
-		else
-			ft_printf("Command '%s' not found\n", cmd);
+		if (msg)
+			ft_printf("%s: %s: %s\n", SH, cmd, strerror(errno));
 		return (1);
 	}
 	return (2);
@@ -82,9 +69,11 @@ int	check_args(int ac, char **av, t_cmd *cmd)
 	if (ac != 5)
 	{
 		ft_printf("<./pipex infile cmd1 cmd2 outfile>\n");
-		return (free_file(cmd->env), 1);
+		return (1);
 	}
-	if (check_path_cmd(av[2], 1) || check_path_cmd(av[3], 1))
+	if (check_path_cmd(av[3], 1) != 2)
+		both = 1;
+	if (check_path_cmd(av[2], 1) != 2 || both)
 		return (0);
 	both = check_cmd(1, av[ac - 2], cmd);
 	while (n > 1)
