@@ -101,17 +101,3 @@ int	check_args(int ac, char **av, t_cmd *cmd)
 	}
 	return (0);
 }
-
-int	check_heredoc(char **av, t_cmd *cmd)
-{
-	if (!ft_strncmp("here_doc", av[1], ft_strlen("here_doc") + 1))
-	{
-		cmd->here_doc = 1;
-		return (6);
-	}
-	else
-	{
-		cmd->here_doc = 0;
-		return (5);
-	}
-}

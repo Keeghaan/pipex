@@ -12,7 +12,7 @@
 
 #include "pipex_bonus.h"
 
-static int	ft_dup2(int n, t_cmd *cmd)
+int	ft_dup2(t_cmd *cmd, int n)
 {
 	if (n == 0)
 	{
@@ -73,9 +73,9 @@ int	child_process(int n, char **av, char **en, t_cmd *cmd)
 	{
 		if (ft_process(av, cmd, n))
 			return (1);
-		if (ft_dup2(n, cmd))
-			return (close_pipes(cmd), close_files(cmd)
-				, free(cmd->path), free_file(cmd->cmd), 2);
+//		if (ft_dup2(n, cmd))
+//			return (close_pipes(cmd), close_files(cmd)
+//				, free(cmd->path), free_file(cmd->cmd), 2);
 		close_pipes(cmd);
 		close_files(cmd);
 		execve(cmd->path, cmd->cmd, en);
