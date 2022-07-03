@@ -65,6 +65,17 @@ static void	msg_error(int msg, int n, char *cmd)
 	}
 }
 
+static int	check_path_cmd2(char *cmd)
+{
+	if (ft_strchr(cmd, '/'))
+	{
+		if (access(cmd, 0) == 0)
+			return (0);
+		return (1);
+	}
+	return (2);
+}
+
 char	*get_path(char	*cmd, char **en, int msg, int n)
 {
 	char	*tmp;
@@ -81,6 +92,8 @@ char	*get_path(char	*cmd, char **en, int msg, int n)
 	}
 	while (en[i])
 	{
+		if (!check_path_cmd2(cmd))
+			return (cmd);
 		tmp = ft_strjoin(en[i], "/");
 		cmd_path = ft_strjoin(tmp, cmd);
 		free(tmp);
