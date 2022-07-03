@@ -56,19 +56,23 @@ int	check_cmd(int n, char *av, t_cmd *cmd)
 static int	check_path_cmd(int ac, int here_doc,  char **av)
 {
 	int	n;
+	int	err;
 
 	n = ac - 2;
-	while (2 + here_doc < n)
+	err = 0;
+	while (2 + here_doc <= n)
 	{
 		if (ft_strchr(av[n], '/'))
 		{
 			if (access(av[n], 0) == 0)
 				return (0);
 			ft_printf("%s: %s: %s\n", SH, av[n], strerror(errno));
-;			return (1);
+			err++;
 		}
 		n--;
 	}
+	if (err)
+		return (1);
 	return (2);
 }
 
