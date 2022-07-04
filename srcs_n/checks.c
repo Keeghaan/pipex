@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 11:17:33 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/01 16:27:37 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/04 12:42:58 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,20 +29,36 @@ int	check_cmd(int n, char *av, t_cmd *cmd)
 	cmd->cmd = ft_split(av, ' ');
 	if (!cmd->cmd)
 		return (1);
-	cmd->path = get_path(cmd->cmd[0], cmd->env, 1, n);
+	if (n == 1)
+		cmd->path = get_path(cmd->cmd[0], cmd->env, 0, n);
+	else
+		cmd->path = get_path(cmd->cmd[0], cmd->env, 1, n);
 	if (!cmd->path && cmd->env[0])
 	{
 		if (cmd->in < 0 && n == 2)
 			return (free_file(cmd->cmd), 4);
 		else
 		{
-			ft_printf("%s: %s\n", SH, cmd->cmd[0], CMDERR);
+			ft_printf("%s: %s: %s\n", SH, cmd->cmd[0], CMDERR);
 			return (free_file(cmd->cmd), 5);
 		}
 	}
 	free(cmd->path);
 	free_file(cmd->cmd);
 	return (0);
+}
+
+int	check_path_cmd(char *cmd, int msg)
+{
+	if (ft_strchr(cmd, '/'))
+	{
+		if (access(cmd, 0) == 0)
+			return (0);
+		if (msg)
+			ft_printf("%s: %s: %s\n", SH, cmd, strerror(errno));
+		return (1);
+	}
+	return (2);
 }
 
 int	check_args(int ac, char **av, t_cmd *cmd)
@@ -58,6 +74,10 @@ int	check_args(int ac, char **av, t_cmd *cmd)
 		ft_printf("<./pipex infile cmd1 cmd2 outfile>\n");
 		return (free_file(cmd->env), 1);
 	}
+	if (check_path_cmd(av[3], 1) != 2)
+		both = 1;
+	if (check_path_cmd(av[2], 1) != 2 || both)
+		return (0);
 	both = check_cmd(1, av[ac - 2], cmd);
 	while (n > 1)
 	{

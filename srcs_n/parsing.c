@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/03 13:26:32 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/01 16:16:31 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/04 12:39:45 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static void	msg_error(int msg, int n, char *cmd)
 
 static int	ft_more_test(char **en, char *cmd, int msg)
 {
-	if (!en[0])
+	if (!en[0] && msg)
 		return (ft_printf("%s: %s: %s\n", SH, cmd, strerror(2)), 1);
 	if (!ft_strncmp(cmd, "df", ft_strlen(cmd)))
 	{
@@ -92,6 +92,8 @@ char	*get_path(char *cmd, char **en, int msg, int n)
 		return (NULL);
 	while (en[i])
 	{
+		if (!check_path_cmd(cmd, 0))
+			return (cmd);
 		tmp = ft_strjoin(en[i], "/");
 		cmd_path = ft_strjoin(tmp, cmd);
 		free(tmp);
