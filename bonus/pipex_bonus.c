@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:11:23 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/01 11:36:59 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/04 13:04:42 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,8 @@ static int	init_struct(t_cmd *cmd, int ac, char **en, char **av)
 			unlink(".here_doc");
 		return (ft_printf("Too few arguments\n"), -1);
 	}
-	cmd->env = get_env(en);
+	if (get_env(cmd, en))
+		return (-1);;
 	if (!cmd->env)
 	{
 		if (ac < check_heredoc(av, cmd))

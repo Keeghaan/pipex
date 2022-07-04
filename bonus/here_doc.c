@@ -6,11 +6,32 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 19:50:32 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/06/30 15:42:47 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/04 13:22:07 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
+
+int	path_not_found(int found, t_cmd *cmd)
+{
+	if (!found)
+	{
+		cmd->env[0] = NULL;
+		return (1);
+	}
+	return (0);
+}
+
+int	more_test(char *cmd, int msg)
+{
+	if (!ft_strncmp(cmd, "df", ft_strlen(cmd)))
+	{
+		if (msg)
+			ft_printf("%s: %s: %s\n", cmd, DF, strerror(1));
+		return (1);
+	}
+	return (0);
+}
 
 int	check_heredoc(char **av, t_cmd *cmd)
 {

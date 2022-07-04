@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:21:13 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/01 11:22:09 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/04 12:52:55 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	check_cmd(int n, char *av, t_cmd *cmd)
 	return (0);
 }
 
-static int	check_path_cmd(int ac, int here_doc,  char **av)
+static int	check_path_cmd(int ac, int here_doc, char **av)
 {
 	int	n;
 	int	err;

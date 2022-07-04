@@ -6,13 +6,13 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:28:31 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/01 11:27:07 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/04 13:21:43 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-char	**get_env(char **envp)
+int	get_env(t_cmd *cmd, char **envp)
 {
 	int	i;
 	int	found;
@@ -29,12 +29,12 @@ char	**get_env(char **envp)
 		}
 		i++;
 	}
-	if (!found)
-		return (NULL);
-	envp = ft_split(envp[i], ':');
-	if (!envp)
-		return (NULL);
-	return (envp);
+	if (path_not_found(found, cmd))
+		return (0);
+	cmd->env = ft_split(envp[i], ':');
+	if (!cmd->env)
+		return (3);
+	return (0);
 }
 
 int	check_digit(char *cmd)
@@ -84,16 +84,14 @@ char	*get_path(char	*cmd, char **en, int msg, int n)
 
 	i = 0;
 	cmd_path = NULL;
-	if (!ft_strncmp(cmd, "df", ft_strlen(cmd)))
-	{
-		if (msg)
-			ft_printf("%s: %s: %s\n", cmd, DF, strerror(1));
+	if (more_test(cmd, msg))
 		return (NULL);
-	}
 	while (en[i])
 	{
 		if (!check_path_cmd2(cmd))
 			return (cmd);
+		if (check_path_cmd2(cmd) == 1)
+			break ;
 		tmp = ft_strjoin(en[i], "/");
 		cmd_path = ft_strjoin(tmp, cmd);
 		free(tmp);

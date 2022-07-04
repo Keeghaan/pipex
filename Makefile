@@ -6,7 +6,7 @@
 #    By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/27 16:43:56 by jcourtoi          #+#    #+#              #
-#    Updated: 2022/07/01 17:09:14 by jcourtoi         ###   ########.fr        #
+#    Updated: 2022/07/04 12:48:16 by jcourtoi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME = pipex
 BONUS = pipex_bonus
 
 SRCS =	srcs_n/pipex.c srcs_n/free.c srcs_n/checks.c \
-	srcs_n/parsing.c srcs_n/process.c srcs_n/more_test.c \
+	srcs_n/parsing.c srcs_n/process.c \
 
 SRCS_BONUS =	bonus/pipex_bonus.c bonus/free_bonus.c bonus/checks_bonus.c \
 		bonus/process_bonus.c bonus/parsing_bonus.c bonus/here_doc.c \
