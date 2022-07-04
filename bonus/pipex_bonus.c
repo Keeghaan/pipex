@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:11:23 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/04 14:35:32 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/04 15:07:34 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,7 @@ static int	ft_open(int ac, char **av, t_cmd *cmd, char **en)
 		if (here_doc(av[2], cmd))
 			return (free_file(cmd->env), unlink(".here_doc"), -2);
 		cmd->out = open(av[ac - 1], O_RDWR | O_CREAT | O_APPEND, 0644);
-		if (cmd->out < 0)
-			error_exit(av[ac - 1], "outfile", cmd);
+			return (0);
 	}
 	else
 	{
