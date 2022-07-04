@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:21:13 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/04 12:52:55 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/04 14:36:17 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,25 +55,30 @@ int	check_cmd(int n, char *av, t_cmd *cmd)
 
 static int	check_path_cmd(int ac, int here_doc, char **av)
 {
-	int	n;
-	int	err;
+	int		n;
+	int		err;
+	char	**split;
 
 	n = ac - 2;
 	err = 0;
 	while (2 + here_doc <= n)
 	{
-		if (ft_strchr(av[n], '/'))
+		split = ft_split(av[n], ' ');
+		if (!split)
+			return (1);
+		if (ft_strchr(split[0], '/'))
 		{
-			if (access(av[n], 0) == 0)
-				return (0);
-			ft_printf("%s: %s: %s\n", SH, av[n], strerror(errno));
+			if (access(split[0], 0) == 0)
+				return (free_file(split), 0);
+			ft_printf("%s: %s: %s\n", SH, split[0], strerror(errno));
+			free_file(split);
 			err++;
 		}
 		n--;
 	}
 	if (err)
 		return (1);
-	return (2);
+	return (free_file(split), 2);
 }
 
 int	check_args(int ac, char **av, t_cmd *cmd)

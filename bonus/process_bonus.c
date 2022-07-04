@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:33:40 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/01 11:30:01 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/04 14:36:32 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	ft_dup2(t_cmd *cmd, int n)
 			return (ft_printf("%s\n", strerror(errno))
 				, close_pipes(cmd), 3);
 	}
-	return (0);
+	return (close_pipes(cmd), close_files(cmd), 0);
 }
 
 static int	ft_process(char **av, t_cmd *cmd, int n)
@@ -72,10 +72,10 @@ int	child_process(int n, char **av, char **en, t_cmd *cmd)
 	else if (cmd->pid == 0)
 	{
 		if (ft_process(av, cmd, n))
-			return (1);
-//		if (ft_dup2(n, cmd))
-//			return (close_pipes(cmd), close_files(cmd)
-//				, free(cmd->path), free_file(cmd->cmd), 2);
+			return (close_pipes(cmd), close_files(cmd), 1);
+		if (ft_dup2(cmd, n))
+			return (close_pipes(cmd), close_files(cmd)
+				, free(cmd->path), free_file(cmd->cmd), 2);
 		close_pipes(cmd);
 		close_files(cmd);
 		execve(cmd->path, cmd->cmd, en);

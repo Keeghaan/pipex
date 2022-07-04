@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:11:23 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/04 13:04:42 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/04 14:35:32 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static int	init_struct(t_cmd *cmd, int ac, char **en, char **av)
 		return (ft_printf("Too few arguments\n"), -1);
 	}
 	if (get_env(cmd, en))
-		return (-1);;
+		return (-1);
 	if (!cmd->env)
 	{
 		if (ac < check_heredoc(av, cmd))
@@ -74,7 +74,7 @@ static int	ft_open(int ac, char **av, t_cmd *cmd, char **en)
 			ft_printf("%s: %s: %s\n", SH, av[1], strerror(errno));
 		cmd->out = open(av[ac - 1], O_RDWR | O_CREAT | O_TRUNC, 0644);
 		if (cmd->out < 0)
-			error_exit(av[ac - 1], "outfile", cmd);
+			return (0);
 	}
 	if (check_args(ac, av, cmd) == 127)
 		return (close_files(cmd), free_file(cmd->env), 127);
@@ -91,8 +91,6 @@ static int	pipex(char **av, char **en, t_cmd cmd)
 	{
 		if (cmd.in < 0 && n == 0)
 			n++;
-		if (ft_dup2(&cmd, n))
-			return (2);
 		if (child_process(n, av, en, &cmd))
 			return (1);
 	}

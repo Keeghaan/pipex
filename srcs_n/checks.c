@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 11:17:33 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/04 12:42:58 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/04 14:17:46 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,15 +50,20 @@ int	check_cmd(int n, char *av, t_cmd *cmd)
 
 int	check_path_cmd(char *cmd, int msg)
 {
-	if (ft_strchr(cmd, '/'))
+	char	**split;
+
+	split = ft_split(cmd, ' ');
+	if (!split)
+		return (3);
+	if (ft_strchr(split[0], '/'))
 	{
-		if (access(cmd, 0) == 0)
-			return (0);
+		if (access(split[0], 0) == 0)
+			return (free_file(split), 0);
 		if (msg)
-			ft_printf("%s: %s: %s\n", SH, cmd, strerror(errno));
-		return (1);
+			ft_printf("%s: %s: %s\n", SH, split[0], strerror(errno));
+		return (free_file(split), 1);
 	}
-	return (2);
+	return (free_file(split), 2);
 }
 
 int	check_args(int ac, char **av, t_cmd *cmd)

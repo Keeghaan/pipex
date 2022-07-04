@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:12:31 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/04 13:21:52 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/04 14:35:47 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int		close_fileno(void);
 int		free_file(char **file);
 int		check_args(int ac, char **av, t_cmd *cmd);
 int		more_test(char *cmd, int msg);
-int	path_not_found(int found, t_cmd *cmd);
+int		path_not_found(int found, t_cmd *cmd);
 void	close_pipes(t_cmd *cmd);
 void	close_files(t_cmd *cmd);
 void	error_exit(char *file, char *err, t_cmd *cmd);
