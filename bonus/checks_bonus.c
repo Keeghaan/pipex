@@ -53,20 +53,40 @@ int	check_cmd(int n, char *av, t_cmd *cmd)
 	return (0);
 }
 
+static int	check_path_cmd(int ac, int here_doc,  char **av)
+{
+	int	n;
+	int	err;
+
+	n = ac - 2;
+	err = 0;
+	while (2 + here_doc <= n)
+	{
+		if (ft_strchr(av[n], '/'))
+		{
+			if (access(av[n], 0) == 0)
+				return (0);
+			ft_printf("%s: %s: %s\n", SH, av[n], strerror(errno));
+			err++;
+		}
+		n--;
+	}
+	if (err)
+		return (1);
+	return (2);
+}
+
 int	check_args(int ac, char **av, t_cmd *cmd)
 {
 	int	n;
-	int	end;
 	int	err;
 	int	both;
 
-	if (!cmd->here_doc)
-		end = 2;
-	else
-		end = 3;
 	n = ac - 2;
+	if (check_path_cmd(ac, cmd->here_doc, av) != 2)
+		return (0);
 	both = check_cmd(1, av[ac - 2], cmd);
-	while (end < n)
+	while (2 + cmd->here_doc < n)
 	{
 		if (cmd->in < 0 && n == 2)
 			break ;
@@ -80,18 +100,4 @@ int	check_args(int ac, char **av, t_cmd *cmd)
 		return (127);
 	}
 	return (0);
-}
-
-int	check_heredoc(char **av, t_cmd *cmd)
-{
-	if (!ft_strncmp("here_doc", av[1], ft_strlen("here_doc") + 1))
-	{
-		cmd->here_doc = 1;
-		return (6);
-	}
-	else
-	{
-		cmd->here_doc = 0;
-		return (5);
-	}
 }

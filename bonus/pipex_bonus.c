@@ -90,6 +90,8 @@ static int	pipex(char **av, char **en, t_cmd cmd)
 	{
 		if (cmd.in < 0 && n == 0)
 			n++;
+		if (ft_dup2(&cmd, n))
+			return (2);
 		if (child_process(n, av, en, &cmd))
 			return (1);
 	}

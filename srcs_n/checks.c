@@ -72,7 +72,7 @@ int	check_args(int ac, char **av, t_cmd *cmd)
 	if (ac != 5)
 	{
 		ft_printf("<./pipex infile cmd1 cmd2 outfile>\n");
-		return (free_file(cmd->env), 1);
+		return (1);
 	}
 	if (check_path_cmd(av[3], 1) != 2)
 		both = 1;
