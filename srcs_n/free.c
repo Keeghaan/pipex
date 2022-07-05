@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 11:47:46 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/04 21:51:30 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/05 15:32:24 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@ void	free_file(char **buf)
 	int	i;
 
 	i = 0;
-	if (!buf[0])
-		return ;
 	while (buf[i])
 	{
 		free(buf[i]);

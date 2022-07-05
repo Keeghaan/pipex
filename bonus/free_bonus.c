@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:26:57 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/04 22:15:43 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/05 15:36:37 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,6 @@ int	free_file(char **file)
 	int	i;
 
 	i = 0;
-	if (!file[i])
-		return (3);
 	while (file[i])
 	{
 		free(file[i]);
