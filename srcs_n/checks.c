@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 11:17:33 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/05 16:40:22 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/05 18:15:42 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	check_path_cmd(int i, char *cmd, char **en, int msg)
 
 	if (ft_strlen(cmd) < 1)
 	{
-		if (!en[0] && i == 2)
+		if (!en[0] && i == 2 && msg)
 			return (ft_printf("env: ‘’: %s\n", strerror(2)), 0);
 		return (ft_printf("Command '' not found\n"), 0);
 	}
@@ -60,8 +60,6 @@ int	check_path_cmd(int i, char *cmd, char **en, int msg)
 		{
 			if (access(split[0], F_OK | X_OK) == 0)
 				return (free_file(split), 0);
-			if (msg)
-				ft_printf("%s: %s: %s\n", SH, split[0], strerror(errno));
 			return (free_file(split), 1);
 		}
 		return (free_file(split), 2);
