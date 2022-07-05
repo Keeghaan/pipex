@@ -6,25 +6,33 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:33:40 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/04 14:36:32 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/05 15:22:31 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-int	ft_dup2(t_cmd *cmd, int n)
+void	close_files(t_cmd *cmd)
+{
+	if (cmd->in > -1)
+		close(cmd->in);
+	if (cmd->out > -1)
+		close(cmd->out);
+}
+
+int	ft_dup2(char **av, t_cmd *cmd, int n)
 {
 	if (n == 0)
 	{
-		if ((dup2(cmd->in, STDIN_FILENO) < 0)
-			|| (dup2(cmd->fd[n][1], STDOUT_FILENO) < 0))
+		if (!ft_strncmp(av[1], "/dev/stdin", ft_strlen(av[1])))
+			return (close_pipes(cmd), close_fileno(), 0);
+		if ((dup2(cmd->fd[n][1], STDOUT_FILENO) < 0)
+			|| (dup2(cmd->in, STDIN_FILENO) < 0))
 			return (ft_printf("%s\n", strerror(errno))
 				, close_pipes(cmd), 1);
-	}	
+	}
 	else if (n == cmd->no - 1)
 	{
-		if (cmd->in)
-			close(cmd->in);
 		if ((dup2(cmd->fd[n - 1][0], STDIN_FILENO) < 0)
 			|| (dup2(cmd->out, STDOUT_FILENO) < 0))
 			return (ft_printf("%s\n", strerror(errno))
@@ -42,11 +50,11 @@ int	ft_dup2(t_cmd *cmd, int n)
 
 static int	ft_process(char **av, t_cmd *cmd, int n)
 {
+	if (ft_strlen(av[2 + cmd->here_doc + n]) < 1)
+		return (4);
 	cmd->cmd = ft_split(av[2 + cmd->here_doc + n], ' ');
 	if (!cmd->cmd)
 	{
-		close_pipes(cmd);
-		close_files(cmd);
 		if (cmd->here_doc)
 			unlink(".here_doc");
 		return (1);
@@ -55,8 +63,6 @@ static int	ft_process(char **av, t_cmd *cmd, int n)
 	if (!cmd->path)
 	{
 		free_file(cmd->cmd);
-		close_files(cmd);
-		close_pipes(cmd);
 		if (cmd->here_doc)
 			unlink(".here_doc");
 		return (2);
@@ -71,11 +77,10 @@ int	child_process(int n, char **av, char **en, t_cmd *cmd)
 		return (1);
 	else if (cmd->pid == 0)
 	{
+		if (ft_dup2(av, cmd, n))
+			return (close_files(cmd), 1);
 		if (ft_process(av, cmd, n))
-			return (close_pipes(cmd), close_files(cmd), 1);
-		if (ft_dup2(cmd, n))
-			return (close_pipes(cmd), close_files(cmd)
-				, free(cmd->path), free_file(cmd->cmd), 2);
+			return (1);
 		close_pipes(cmd);
 		close_files(cmd);
 		execve(cmd->path, cmd->cmd, en);

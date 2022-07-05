@@ -6,11 +6,38 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 11:01:44 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/04 13:26:22 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/04 22:32:24 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pipex.h"
+
+int	get_env(t_cmd *cmd, char **envp)
+{
+	int	i;
+	int	found;
+
+	i = 0;
+	found = 0;
+	if (!envp[i])
+		return (1);
+	while (envp[i])
+	{
+		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
+		{
+			envp[i] = ft_strchr(envp[i], '/');
+			found = 1;
+			break ;
+		}
+		i++;
+	}
+	if (path_not_found(found, cmd))
+		return (0);
+	cmd->env = ft_split(envp[i], ':');
+	if (!cmd->env)
+		return (3);
+	return (0);
+}
 
 int	ft_open(int ac, char **av, t_cmd *cmd, char **envp)
 {
@@ -40,13 +67,13 @@ int	pipex(t_cmd cmd, char **av)
 	{
 		cmd.pid1 = fork();
 		if (cmd.pid1 < 0)
-			return (4);
+			return (close_files(&cmd), 4);
 		if (cmd.pid1 == 0)
 			child_process_one(&cmd, av);
 	}
 	cmd.pid2 = fork();
 	if (cmd.pid2 < 0)
-		return (5);
+		return (close_files(&cmd), 5);
 	if (cmd.pid2 == 0)
 		child_process_two(&cmd, av);
 	close_fd(&cmd);

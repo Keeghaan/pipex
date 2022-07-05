@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 19:50:32 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/04 13:22:07 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/04 20:45:41 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,17 @@ int	path_not_found(int found, t_cmd *cmd)
 {
 	if (!found)
 	{
+		cmd->env = malloc(sizeof(char *));
 		cmd->env[0] = NULL;
 		return (1);
 	}
 	return (0);
 }
 
-int	more_test(char *cmd, int msg)
+int	more_test(char **en, char *cmd, int msg)
 {
+	if (!en[0] && msg)
+		return (ft_printf("%s: %s: %s\n", SH, cmd, strerror(2)), 1);
 	if (!ft_strncmp(cmd, "df", ft_strlen(cmd)))
 	{
 		if (msg)
@@ -57,10 +60,10 @@ static void	get_heredoc(int fd, char *limiter)
 		tmp = get_next_line(STDIN_FILENO);
 		if (!tmp)
 			break ;
-		write(fd, tmp, ft_strlen(tmp));
 		if (!ft_strncmp(limiter, tmp, ft_strlen(limiter))
 			&& ft_strlen(limiter) == ft_strlen(tmp) - 1)
 			break ;
+		write(fd, tmp, ft_strlen(tmp));
 		free(tmp);
 	}
 	free(tmp);

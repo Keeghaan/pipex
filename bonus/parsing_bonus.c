@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:28:31 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/04 13:21:43 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/05 14:31:36 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,26 +37,12 @@ int	get_env(t_cmd *cmd, char **envp)
 	return (0);
 }
 
-int	check_digit(char *cmd)
-{
-	int	i;
-
-	i = 0;
-	while (cmd[i])
-	{
-		if (ft_isdigit(cmd[i]))
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
 static void	msg_error(int msg, int n, char *cmd)
 {
 	int	digit;
 
 	digit = check_digit(cmd);
-	if (msg && n > 1)
+	if (msg && n > 1 && !ft_strchr(cmd, '/'))
 	{
 		if (!digit)
 			ft_printf("Command '%s' not found\n", cmd);
@@ -69,37 +55,51 @@ static int	check_path_cmd2(char *cmd)
 {
 	if (ft_strchr(cmd, '/'))
 	{
-		if (access(cmd, 0) == 0)
+		if (access(cmd, F_OK | X_OK) == 0)
 			return (0);
 		return (1);
 	}
 	return (2);
 }
 
-char	*get_path(char	*cmd, char **en, int msg, int n)
+char	*ret_path(int i, char *cmd, char **en)
 {
 	char	*tmp;
 	char	*cmd_path;
-	int		i;
 
-	i = 0;
 	cmd_path = NULL;
-	if (more_test(cmd, msg))
-		return (NULL);
-	while (en[i])
+	tmp = NULL;
+	if (!check_path_cmd2(cmd))
+		cmd_path = ft_strdup(cmd);
+	else
 	{
-		if (!check_path_cmd2(cmd))
-			return (cmd);
-		if (check_path_cmd2(cmd) == 1)
-			break ;
 		tmp = ft_strjoin(en[i], "/");
 		cmd_path = ft_strjoin(tmp, cmd);
 		free(tmp);
-		if (access(cmd_path, 0) == 0)
-			return (cmd_path);
-		free(cmd_path);
+	}
+	if (access(cmd_path, 0) == 0)
+		return (cmd_path);
+	free(cmd_path);
+	return (NULL);
+}
+
+char	*get_path(char	*cmd, char **en, int msg, int n)
+{
+	int		i;
+	char	*ret;
+
+	i = 0;
+	ret = NULL;
+	if (more_test(en, cmd, msg))
+		return (NULL);
+	while (en[i])
+	{
+		ret = ret_path(i, cmd, en);
+		if (ret != NULL)
+			return (ret);
 		i++;
 	}
-	msg_error(msg, n, cmd);
-	return (NULL);
+	if (en[0])
+		msg_error(msg, n, cmd);
+	return (ret);
 }

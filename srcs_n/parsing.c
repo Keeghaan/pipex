@@ -6,38 +6,11 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/03 13:26:32 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/04 12:39:45 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/05 14:29:05 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pipex.h"
-
-int	get_env(t_cmd *cmd, char **envp)
-{
-	int	i;
-	int	found;
-
-	i = 0;
-	found = 0;
-	if (!envp[i])
-		return (1);
-	while (envp[i])
-	{
-		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
-		{
-			envp[i] = ft_strchr(envp[i], '/');
-			found = 1;
-			break ;
-		}
-		i++;
-	}
-	if (path_not_found(found, cmd))
-		return (0);
-	cmd->env = ft_split(envp[i], ':');
-	if (!cmd->env)
-		return (3);
-	return (0);
-}
 
 static int	check_digit(char *cmd)
 {
@@ -58,7 +31,7 @@ static void	msg_error(int msg, int n, char *cmd)
 	int	digit;
 
 	digit = check_digit(cmd);
-	if (msg && n > 1)
+	if (msg && n > 1 && !ft_strchr(cmd, '/'))
 	{
 		if (!digit)
 			ft_printf("Command '%s' not found\n", cmd);
@@ -80,29 +53,44 @@ static int	ft_more_test(char **en, char *cmd, int msg)
 	return (0);
 }
 
+static char	*ret_path(int i, char *cmd, char **en)
+{
+	char	*cmd_path;
+	char	*tmp;
+
+	tmp = NULL;
+	cmd_path = NULL;
+	if (!check_path_cmd(cmd, 0))
+		cmd_path = ft_strdup(cmd);
+	else
+	{
+		tmp = ft_strjoin(en[i], "/");
+		cmd_path = ft_strjoin(tmp, cmd);
+		free(tmp);
+	}
+	if (access(cmd_path, F_OK | X_OK) == 0)
+		return (cmd_path);
+	free(cmd_path);
+	return (NULL);
+}
+
 char	*get_path(char *cmd, char **en, int msg, int n)
 {
-	char	*tmp;
 	char	*cmd_path;
 	int		i;
 
-	i = 0;
 	cmd_path = NULL;
+	i = 0;
 	if (ft_more_test(en, cmd, msg))
 		return (NULL);
 	while (en[i])
 	{
-		if (!check_path_cmd(cmd, 0))
-			return (cmd);
-		tmp = ft_strjoin(en[i], "/");
-		cmd_path = ft_strjoin(tmp, cmd);
-		free(tmp);
-		if (access(cmd_path, 0) == 0)
+		cmd_path = ret_path(i, cmd, en);
+		if (cmd_path != NULL)
 			return (cmd_path);
-		free(cmd_path);
-	i++;
+		i++;
 	}
-	if (en[i])
+	if (en[0])
 		msg_error(msg, n, cmd);
-	return (NULL);
+	return (cmd_path);
 }

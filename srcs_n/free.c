@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 11:47:46 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/01 15:52:27 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/04 21:51:30 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	free_file(char **buf)
 	int	i;
 
 	i = 0;
-	if (!buf[i])
+	if (!buf[0])
 		return ;
 	while (buf[i])
 	{
@@ -55,9 +55,7 @@ int	close_fd(t_cmd *cmd)
 
 void	free_process(t_cmd *cmd)
 {
-	if (cmd->fd[0] > -1 || cmd->fd[1] > -1)
-		close_fd(cmd);
-	if (cmd->in > -1 || cmd->out > -1)
-		close_files(cmd);
+	close_fd(cmd);
+	close_files(cmd);
 	close_parent();
 }

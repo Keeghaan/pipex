@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:11:23 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/04 15:07:34 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/05 14:09:22 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ static int	init_struct(t_cmd *cmd, int ac, char **en, char **av)
 	cmd->pid = -2;
 	cmd->in = -3;
 	cmd->out = -4;
+	cmd->std_in = 0;
 	if (ac < check_heredoc(av, cmd))
 	{
 		if (cmd->here_doc)
@@ -41,16 +42,7 @@ static int	init_struct(t_cmd *cmd, int ac, char **en, char **av)
 		return (ft_printf("Too few arguments\n"), -1);
 	}
 	if (get_env(cmd, en))
-		return (-1);
-	if (!cmd->env)
-	{
-		if (ac < check_heredoc(av, cmd))
-		{
-			if (cmd->here_doc)
-				unlink(".here_doc");
-			return (close_fileno(), -2);
-		}
-	}
+		return (-2);
 	return (0);
 }
 
@@ -64,7 +56,7 @@ static int	ft_open(int ac, char **av, t_cmd *cmd, char **en)
 		if (here_doc(av[2], cmd))
 			return (free_file(cmd->env), unlink(".here_doc"), -2);
 		cmd->out = open(av[ac - 1], O_RDWR | O_CREAT | O_APPEND, 0644);
-			return (0);
+		return (0);
 	}
 	else
 	{
@@ -110,8 +102,8 @@ int	main(int ac, char **av, char **en)
 	if (!cmd.fd)
 		return (free_file(cmd.env), close_fileno());
 	if (pipex(av, en, cmd))
-		return (close_files(&cmd), close_pipes(&cmd)
-			, free_parent(&cmd), close_fileno());
+		return (close_pipes(&cmd), free_parent(&cmd)
+			, close_fileno());
 	close_files(&cmd);
 	close_pipes(&cmd);
 	waitpid(cmd.pid, NULL, 0);

@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:26:57 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/04 13:05:05 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/04 22:15:43 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,19 @@ int	close_fileno(void)
 	close(STDOUT_FILENO);
 	close(STDERR_FILENO);
 	return (1);
+}
+
+void	close_pipes(t_cmd *cmd)
+{
+	int	i;
+
+	i = 0;
+	while (i < cmd->no - 1)
+	{
+		close(cmd->fd[i][0]);
+		close(cmd->fd[i][1]);
+		i++;
+	}
 }
 
 int	free_file(char **file)
@@ -37,20 +50,6 @@ int	free_file(char **file)
 	return (2);
 }
 
-void	error_exit(char *file, char *error, t_cmd *cmd)
-{
-	if (!ft_strncmp(error, "infile", ft_strlen(error)))
-		ft_printf("%s: %s: %s\n", SH, file, strerror(errno));
-	if (!ft_strncmp(error, "outfile", ft_strlen(error)))
-		ft_printf("%s: %s: %s\n", SH, file, strerror(errno));
-	if (cmd->here_doc)
-		unlink(".here_doc");
-	free_file(cmd->env);
-	close_files(cmd);
-	close_fileno();
-	exit(1);
-}
-
 int	free_parent(t_cmd *cmd)
 {
 	int	i;
@@ -59,7 +58,7 @@ int	free_parent(t_cmd *cmd)
 	while (i < cmd->no - 1)
 		free(cmd->fd[i++]);
 	free(cmd->fd);
-	if (cmd->env)
+	if (cmd->env[0])
 		free_file(cmd->env);
 	if (cmd->here_doc)
 		unlink(".here_doc");
@@ -82,12 +81,9 @@ int	free_process(t_cmd *cmd)
 	while (i < cmd->no - 1)
 		free(cmd->fd[i++]);
 	free(cmd->fd);
-	if (cmd->env)
+	if (cmd->env[0])
 		free_file(cmd->env);
-	if (cmd->in > -1)
-		close(cmd->in);
-	if (cmd->out > -1)
-		close(cmd->out);
+	close_files(cmd);
 	close_fileno();
 	return (4);
 }
