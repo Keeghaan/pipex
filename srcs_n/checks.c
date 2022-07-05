@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 11:17:33 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/05 16:22:59 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/05 16:30:46 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,11 @@ int	check_cmd(int n, char *av, t_cmd *cmd)
 	return (0);
 }
 
-int	check_path_cmd(int i, char **cmd, char **en, int msg)
+int	check_path_cmd(int i, char *cmd, char **en, int msg)
 {
 	char	**split;
-	int		err;
 
-	err = 0;
-	if (ft_strlen(cmd[i]) < 1)
+	if (ft_strlen(cmd) < 1)
 	{
 		if (!en[0] && i == 2)
 			return (ft_printf("env: ‘’: %s\n", strerror(2)), 0);
@@ -55,7 +53,7 @@ int	check_path_cmd(int i, char **cmd, char **en, int msg)
 	}
 	else
 	{
-		split = ft_split(cmd[i], ' ');
+		split = ft_split(cmd, ' ');
 		if (!split)
 			return (3);
 		if (ft_strchr(split[0], '/'))
@@ -85,7 +83,7 @@ int	other_check(int ac, char **av, char **en)
 	}
 	while (i < ac - 1)
 	{
-		if (check_path_cmd(i, av, en, 1))
+		if (check_path_cmd(i, av[i], en, 1))
 			check = 1;
 		i++;
 	}

@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/03 13:26:32 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/05 16:12:24 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/05 16:31:50 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static void	msg_error(int msg, int n, char *cmd)
 static int	ft_more_test(char **en, char *cmd, int msg)
 {
 	if (!en[0] && msg)
-		return (ft_printf("i%s: %s: %s\n", SH, cmd, strerror(2)), 1);
+		return (ft_printf("%s: %s: %s\n", SH, cmd, strerror(2)), 1);
 	if (!ft_strncmp(cmd, "df", ft_strlen(cmd)))
 	{
 		if (msg)
@@ -60,7 +60,7 @@ static char	*ret_path(int i, char *cmd, char **en)
 
 	tmp = NULL;
 	cmd_path = NULL;
-	if (!check_path_cmd(cmd, en, 0))
+	if (!check_path_cmd(0, cmd, en, 0))
 		cmd_path = ft_strdup(cmd);
 	else
 	{
@@ -68,7 +68,6 @@ static char	*ret_path(int i, char *cmd, char **en)
 		cmd_path = ft_strjoin(tmp, cmd);
 		free(tmp);
 	}
-	ft_printf("%s\n", cmd_path);
 	if (access(cmd_path, F_OK | X_OK) == 0)
 		return (cmd_path);
 	free(cmd_path);
