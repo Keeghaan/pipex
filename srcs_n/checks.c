@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 11:17:33 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/05 15:29:16 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/05 16:01:40 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ int	path_not_found(int found, t_cmd *cmd)
 
 int	check_cmd(int n, char *av, t_cmd *cmd)
 {
+	if (ft_strlen(av) < 1)
+		return (0);
 	cmd->cmd = ft_split(av, ' ');
 	if (!cmd->cmd)
 		return (1);
@@ -42,21 +44,30 @@ int	check_cmd(int n, char *av, t_cmd *cmd)
 int	check_path_cmd(char *cmd, int msg)
 {
 	char	**split;
+	int		err;
 
+	err = 0;
 	if (ft_strlen(cmd) < 1)
-		return (ft_printf("Command '' not found\n"), 1);
-	split = ft_split(cmd, ' ');
-	if (!split)
-		return (3);
-	if (ft_strchr(split[0], '/'))
 	{
-		if (access(split[0], F_OK | X_OK) == 0)
-			return (free_file(split), 0);
-		if (msg)
-			ft_printf("%s: %s: %s\n", SH, split[0], strerror(errno));
-		return (free_file(split), 1);
+		ft_printf("Command '' not found\n");
+		return (0);
 	}
-	return (free_file(split), 2);
+	else
+	{
+		split = ft_split(cmd, ' ');
+		if (!split)
+			return (3);
+		if (ft_strchr(split[0], '/'))
+		{
+			if (access(split[0], F_OK | X_OK) == 0)
+				return (free_file(split), 0);
+			if (msg)
+				ft_printf("%s: %s: %s\n", SH, split[0], strerror(errno));
+			return (free_file(split), 1);
+		}
+		return (free_file(split), 2);
+	}
+	return (1);
 }
 
 int	other_check(int ac, char **av)
@@ -83,8 +94,7 @@ int	check_args(int ac, char **av, t_cmd *cmd)
 	int	both;
 
 	n = ac - 2;
-	if (other_check(ac, av))
-		return (free_file(cmd->env), 1);
+	other_check(ac, av);
 	both = check_cmd(1, av[ac - 2], cmd);
 	while (n > 1)
 	{

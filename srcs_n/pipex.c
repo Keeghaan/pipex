@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 11:01:44 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/04 22:32:24 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/05 16:00:01 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ int	ft_open(int ac, char **av, t_cmd *cmd, char **envp)
 	err = check_args(ac, av, cmd);
 	if (err == 127)
 		return (close_files(cmd), close_parent(), 127);
-	else if (err)
-		return (close_files(cmd), close_parent(), -2);
+	//else if (err)
+	//	return (close_files(cmd), close_parent(), -2);
 	return (0);
 }
 
