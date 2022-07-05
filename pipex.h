@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 18:34:02 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/04 12:36:00 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/05 16:19:36 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int		child_process_two(t_cmd *cmd, char **av);
 int		path_not_found(int found, t_cmd *cmd);
 int		file_ok(char **av);
 int		open_out(t_cmd *cmd, char **av);
-int		check_path_cmd(char *cmd, int msg);
+int		check_path_cmd(int i, char **cmd, char **en, int msg);
 void	free_process(t_cmd *cmd);
 void	free_file(char **file);
 void	free_parent(t_cmd *cmd);

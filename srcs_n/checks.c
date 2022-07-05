@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 11:17:33 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/05 16:01:40 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/05 16:22:59 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,20 +41,21 @@ int	check_cmd(int n, char *av, t_cmd *cmd)
 	return (0);
 }
 
-int	check_path_cmd(char *cmd, int msg)
+int	check_path_cmd(int i, char **cmd, char **en, int msg)
 {
 	char	**split;
 	int		err;
 
 	err = 0;
-	if (ft_strlen(cmd) < 1)
+	if (ft_strlen(cmd[i]) < 1)
 	{
-		ft_printf("Command '' not found\n");
-		return (0);
+		if (!en[0] && i == 2)
+			return (ft_printf("env: ‘’: %s\n", strerror(2)), 0);
+		return (ft_printf("Command '' not found\n"), 0);
 	}
 	else
 	{
-		split = ft_split(cmd, ' ');
+		split = ft_split(cmd[i], ' ');
 		if (!split)
 			return (3);
 		if (ft_strchr(split[0], '/'))
@@ -70,20 +71,24 @@ int	check_path_cmd(char *cmd, int msg)
 	return (1);
 }
 
-int	other_check(int ac, char **av)
+int	other_check(int ac, char **av, char **en)
 {
-	int	both;
+	int	i;
+	int	check;
 
-	both = 0;
+	i = 2;
+	check = 0;
 	if (ac != 5)
 	{
 		ft_printf("<./pipex infile cmd1 cmd2 outfile>\n");
 		return (1);
 	}
-	if (check_path_cmd(av[3], 1))
-		both = 1;
-	if (check_path_cmd(av[2], 1) || both)
-		return (1);
+	while (i < ac - 1)
+	{
+		if (check_path_cmd(i, av, en, 1))
+			check = 1;
+		i++;
+	}
 	return (0);
 }
 
@@ -94,7 +99,7 @@ int	check_args(int ac, char **av, t_cmd *cmd)
 	int	both;
 
 	n = ac - 2;
-	other_check(ac, av);
+	other_check(ac, av, cmd->env);
 	both = check_cmd(1, av[ac - 2], cmd);
 	while (n > 1)
 	{
