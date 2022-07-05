@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:21:13 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/05 17:18:37 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/05 18:11:05 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,17 +28,21 @@ int	check_digit(char *cmd)
 
 int	check_cmd(int n, char *av, t_cmd *cmd)
 {
-	cmd->cmd = ft_split(av, ' ');
-	if (!cmd->cmd)
-		return (2);
-	if (n == 1)
-		cmd->path = get_path(cmd->cmd[0], cmd->env, 0, n);
-	else
-		cmd->path = get_path(cmd->cmd[0], cmd->env, 1, n);
-	if (!cmd->path)
-		return (free_file(cmd->cmd), 4);
-	free(cmd->path);
-	free_file(cmd->cmd);
+	if (ft_strlen(av) > 0)
+	{
+		cmd->cmd = ft_split(av, ' ');
+		if (!cmd->cmd)
+			return (2);
+		if (n == 1)
+			cmd->path = get_path(cmd->cmd[0], cmd->env, 0, n);
+		else
+			cmd->path = get_path(cmd->cmd[0], cmd->env, 1, n);
+		if (!cmd->path)
+			return (free_file(cmd->cmd), 4);
+		free(cmd->path);
+		free_file(cmd->cmd);
+		return (0);
+	}
 	return (0);
 }
 
@@ -46,7 +50,7 @@ static int	split_path(char *av, int err)
 {
 	char	**split;
 
-	if (ft_strlen(av) > 1)
+	if (ft_strlen(av) > 0)
 	{
 		split = ft_split(av, ' ');
 		if (!split)
@@ -106,8 +110,7 @@ int	check_args(int ac, char **av, t_cmd *cmd)
 
 	n = ac - 2;
 	err = 0;
-	if (check_path_cmd(ac, cmd->here_doc, av, cmd->env))
-		return (1);
+	check_path_cmd(ac, cmd->here_doc, av, cmd->env);
 	both = check_cmd(1, av[ac - 2], cmd);
 	while (2 + cmd->here_doc <= n)
 	{
