@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:21:13 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/05 18:11:05 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/05 18:14:31 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ static int	split_path(char *av, int err)
 		{
 			if (access(split[0], F_OK | X_OK) == 0)
 				return (free_file(split), 0);
-			ft_printf("%s: %s: %s\n", SH, split[0], strerror(errno));
 			err++;
 			return (free_file(split), 2);
 		}
