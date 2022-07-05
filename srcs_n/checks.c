@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 11:17:33 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/05 16:30:46 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/05 16:40:22 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,22 +71,27 @@ int	check_path_cmd(int i, char *cmd, char **en, int msg)
 
 int	other_check(int ac, char **av, char **en)
 {
-	int	i;
 	int	check;
+	int	i;
 
-	i = 2;
 	check = 0;
+	if (!en[0])
+		i = 2;
+	else
+		i = 3;
 	if (ac != 5)
 	{
 		ft_printf("<./pipex infile cmd1 cmd2 outfile>\n");
 		return (1);
 	}
-	while (i < ac - 1)
-	{
-		if (check_path_cmd(i, av[i], en, 1))
-			check = 1;
+	if (check_path_cmd(i, av[i], en, 1))
+		check = 1;
+	if (!en[0])
 		i++;
-	}
+	else
+		i--;
+	if (check_path_cmd(i, av[i], en, 1) || check)
+		return (1);
 	return (0);
 }
 
