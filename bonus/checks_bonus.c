@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:21:13 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/05 15:25:22 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/05 17:18:37 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,39 +42,59 @@ int	check_cmd(int n, char *av, t_cmd *cmd)
 	return (0);
 }
 
-static int	check_path_cmd(int ac, int here_doc, char **av)
+static int	split_path(char *av, int err)
+{
+	char	**split;
+
+	if (ft_strlen(av) > 1)
+	{
+		split = ft_split(av, ' ');
+		if (!split)
+		{
+			err++;
+			return (1);
+		}
+		if (ft_strchr(split[0], '/'))
+		{
+			if (access(split[0], F_OK | X_OK) == 0)
+				return (free_file(split), 0);
+			ft_printf("%s: %s: %s\n", SH, split[0], strerror(errno));
+			err++;
+			return (free_file(split), 2);
+		}
+		free_file(split);
+		err++;
+		return (4);
+	}
+	err++;
+	return (3);
+}
+
+static int	check_path_cmd(int ac, int here_doc, char **av, char **en)
 {
 	int		n;
 	int		err;
-	char	**split;
 
-	n = ac - 2;
+	n = ac - 1;
 	err = 0;
+	if (ft_strlen(av[2 + here_doc]) < 1 && !en[0])
+	{
+		ft_printf("env: ‘’: %s\n", strerror(2));
+		err++;
+	}
 	while (2 + here_doc <= n)
 	{
-		if (ft_strlen(av[n]) < 1)
+		if (ft_strlen(av[n]) < 1 && n != 2 + here_doc)
 		{
 			ft_printf("Command '' not found\n");
 			err++;
 		}
 		else
-		{
-			split = ft_split(av[n], ' ');
-			if (!split)
-				return (1);
-			if (ft_strchr(split[0], '/'))
-			{
-				if (access(split[0], F_OK | X_OK) == 0)
-					return (free_file(split), 0);
-				ft_printf("%s: %s: %s\n", SH, split[0], strerror(errno));
-				err++;
-			}
-			free_file(split);
-		}
+			split_path(av[n], err);
 		n--;
 	}
-	if (err)
-		return (1);
+	if (!err)
+		return (0);
 	return (2);
 }
 
@@ -86,7 +106,7 @@ int	check_args(int ac, char **av, t_cmd *cmd)
 
 	n = ac - 2;
 	err = 0;
-	if (check_path_cmd(ac, cmd->here_doc, av))
+	if (check_path_cmd(ac, cmd->here_doc, av, cmd->env))
 		return (1);
 	both = check_cmd(1, av[ac - 2], cmd);
 	while (2 + cmd->here_doc <= n)
@@ -100,7 +120,7 @@ int	check_args(int ac, char **av, t_cmd *cmd)
 	{
 		if (cmd->here_doc)
 			unlink(".here_doc");
-		return (127);
+		return (free_file(cmd->env), 127);
 	}
 	return (0);
 }

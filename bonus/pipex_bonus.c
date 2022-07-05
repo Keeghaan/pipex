@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:11:23 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/05 14:09:22 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/05 17:20:30 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static int	ft_open(int ac, char **av, t_cmd *cmd, char **en)
 			return (0);
 	}
 	if (check_args(ac, av, cmd) == 127)
-		return (close_files(cmd), free_file(cmd->env), 127);
+		return (close_files(cmd), 127);
 	return (0);
 }
 
@@ -95,7 +95,7 @@ int	main(int ac, char **av, char **en)
 
 	err = ft_open(ac, av, &cmd, en);
 	if (err < 0)
-		return (close_fileno(), 0);
+		return (free_file(cmd.env), close_fileno(), 0);
 	if (err == 127)
 		return (close_fileno(), 127);
 	cmd.fd = malloc(sizeof(int *) * (cmd.no - 1));
