@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:12:31 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/05 14:14:44 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/06 12:34:48 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 
 typedef struct s_cmd
 {
-	pid_t	pid;
+	pid_t	*pid;
 	char	**env;
 	char	*path;
 	char	**cmd;
@@ -61,7 +61,7 @@ void	check_file(char *file, t_cmd *cmd);
 int		child_process(int n, char **av, char **en, t_cmd *cmd);
 int		check_heredoc(char **av, t_cmd *cmd);
 int		here_doc(char *limiter, t_cmd *cmd);
-int		ft_dup2(char **av, t_cmd *cmd, int n);
+int		ft_dup2(t_cmd *cmd, int n);
 int		get_env(t_cmd *cmd, char **envp);
 char	*get_path(char *cmd, char **en, int msg, int n);
 

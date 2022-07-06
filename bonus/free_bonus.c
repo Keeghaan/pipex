@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:26:57 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/05 17:20:24 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/06 12:33:15 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ int	free_parent(t_cmd *cmd)
 		free(cmd->fd[i++]);
 	free(cmd->fd);
 	free_file(cmd->env);
+	free(cmd->pid);
 	if (cmd->here_doc)
 		unlink(".here_doc");
 	close_files(cmd);
@@ -79,6 +80,7 @@ int	free_process(t_cmd *cmd)
 		free(cmd->fd[i++]);
 	free(cmd->fd);
 	free_file(cmd->env);
+	free(cmd->pid);
 	close_files(cmd);
 	close_fileno();
 	return (4);

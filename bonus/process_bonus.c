@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:33:40 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/05 15:22:31 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/06 12:34:38 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,10 @@ void	close_files(t_cmd *cmd)
 		close(cmd->out);
 }
 
-int	ft_dup2(char **av, t_cmd *cmd, int n)
+int	ft_dup2(t_cmd *cmd, int n)
 {
 	if (n == 0)
 	{
-		if (!ft_strncmp(av[1], "/dev/stdin", ft_strlen(av[1])))
-			return (close_pipes(cmd), close_fileno(), 0);
 		if ((dup2(cmd->fd[n][1], STDOUT_FILENO) < 0)
 			|| (dup2(cmd->in, STDIN_FILENO) < 0))
 			return (ft_printf("%s\n", strerror(errno))
@@ -72,12 +70,12 @@ static int	ft_process(char **av, t_cmd *cmd, int n)
 
 int	child_process(int n, char **av, char **en, t_cmd *cmd)
 {
-	cmd->pid = fork();
-	if (cmd->pid < 0)
+	cmd->pid[n] = fork();
+	if (cmd->pid[n] < 0)
 		return (1);
-	else if (cmd->pid == 0)
+	else if (cmd->pid[n] == 0)
 	{
-		if (ft_dup2(av, cmd, n))
+		if (ft_dup2(cmd, n))
 			return (close_files(cmd), 1);
 		if (ft_process(av, cmd, n))
 			return (1);

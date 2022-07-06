@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:11:23 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/06 12:12:13 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/06 12:29:07 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,9 @@ static void	ft_pipe(t_cmd *cmd)
 
 static int	init_struct(t_cmd *cmd, int ac, char **en, char **av)
 {
-	cmd->pid = -2;
+	int	i;
+
+	i = -1;
 	cmd->in = -3;
 	cmd->out = -4;
 	cmd->std_in = 0;
@@ -41,6 +43,10 @@ static int	init_struct(t_cmd *cmd, int ac, char **en, char **av)
 			unlink(".here_doc");
 		return (ft_printf("Too few arguments\n"), -1);
 	}
+	cmd->no = (ac - 3 - cmd->here_doc);
+	cmd->pid = malloc(sizeof(pid_t) * cmd->no);
+	while (++i < cmd->no)
+		cmd->pid[i] = -2;
 	if (get_env(cmd, en))
 		return (-2);
 	return (0);
@@ -50,7 +56,6 @@ static int	ft_open(int ac, char **av, t_cmd *cmd, char **en)
 {
 	if (init_struct(cmd, ac, en, av) < 0)
 		return (-1);
-	cmd->no = (ac - 3 - cmd->here_doc);
 	if (cmd->here_doc)
 	{
 		if (here_doc(av[2], cmd))
@@ -75,8 +80,10 @@ static int	ft_open(int ac, char **av, t_cmd *cmd, char **en)
 static int	pipex(char **av, char **en, t_cmd cmd)
 {
 	int	n;
+	int	i;
 
 	n = -1;
+	i = -1;
 	ft_pipe(&cmd);
 	while (++n < cmd.no)
 	{
@@ -85,6 +92,10 @@ static int	pipex(char **av, char **en, t_cmd cmd)
 		if (child_process(n, av, en, &cmd))
 			return (1);
 	}
+	close_files(&cmd);
+	close_pipes(&cmd);
+	while (++i < cmd.no)
+		waitpid(cmd.pid[i], NULL, 0);
 	return (0);
 }
 
@@ -104,8 +115,5 @@ int	main(int ac, char **av, char **en)
 	if (pipex(av, en, cmd))
 		return (close_pipes(&cmd), free_parent(&cmd)
 			, close_fileno());
-	close_files(&cmd);
-	close_pipes(&cmd);
-	waitpid(cmd.pid, NULL, 0);
 	return (free_parent(&cmd), 0);
 }
