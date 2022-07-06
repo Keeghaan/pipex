@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/03 13:26:32 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/05 16:31:50 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/06 13:04:29 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,15 @@ static int	check_digit(char *cmd)
 	return (0);
 }
 
-static void	msg_error(int msg, int n, char *cmd)
+static void	msg_error(int infile, int msg, int n, char *cmd)
 {
 	int	digit;
 
 	digit = check_digit(cmd);
 	if (msg && n > 1 && !ft_strchr(cmd, '/'))
 	{
+		if (infile < 0 && n == 2)
+			return ;
 		if (!digit)
 			ft_printf("Command '%s' not found\n", cmd);
 		else
@@ -74,23 +76,23 @@ static char	*ret_path(int i, char *cmd, char **en)
 	return (NULL);
 }
 
-char	*get_path(char *cmd, char **en, int msg, int n)
+char	*get_path(char *cmd, t_cmd *command, int msg, int n)
 {
 	char	*cmd_path;
 	int		i;
 
 	cmd_path = NULL;
 	i = 0;
-	if (ft_more_test(en, cmd, msg))
+	if (ft_more_test(command->env, cmd, msg))
 		return (NULL);
-	while (en[i])
+	while (command->env[i])
 	{
-		cmd_path = ret_path(i, cmd, en);
+		cmd_path = ret_path(i, cmd, command->env);
 		if (cmd_path != NULL)
 			return (cmd_path);
 		i++;
 	}
-	if (en[0])
-		msg_error(msg, n, cmd);
+	if (command->env[0])
+		msg_error(command->in, msg, n, cmd);
 	return (cmd_path);
 }

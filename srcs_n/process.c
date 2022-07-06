@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 13:46:07 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/04 22:00:07 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/06 13:03:49 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	child_process_one(t_cmd *cmd, char **av)
 	cmd->cmd = ft_split(av[2], ' ');
 	if (!cmd->cmd)
 		return (free_process(cmd), 2);
-	cmd->path = get_path(cmd->cmd[0], cmd->env, 0, 5);
+	cmd->path = get_path(cmd->cmd[0], cmd, 0, 5);
 	if (!cmd->path)
 		return (free_file(cmd->cmd), free_process(cmd), 3);
 	execve(cmd->path, cmd->cmd, cmd->env);
@@ -56,7 +56,7 @@ int	child_process_two(t_cmd *cmd, char **av)
 	cmd->cmd = ft_split(av[3], ' ');
 	if (!cmd->cmd)
 		return (free_process(cmd), 2);
-	cmd->path = get_path(cmd->cmd[0], cmd->env, 0, 5);
+	cmd->path = get_path(cmd->cmd[0], cmd, 0, 5);
 	if (!cmd->path)
 		return (free_file(cmd->cmd), free_process(cmd), 3);
 	execve(cmd->path, cmd->cmd, cmd->env);

@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 18:34:02 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/05 16:29:38 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/06 13:03:02 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,6 @@ void	free_parent(t_cmd *cmd);
 void	init_struct(t_cmd *cmd);
 void	close_parent(void);
 int		get_env(t_cmd *cmd, char **envp);
-char	*get_path(char *cmd, char **en, int msg, int n);
+char	*get_path(char *cmd, t_cmd *command, int msg, int n);
 
 #endif
