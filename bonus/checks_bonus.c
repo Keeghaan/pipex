@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:21:13 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/06 13:53:46 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/06 14:38:36 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,10 +76,10 @@ static void	check_path_cmd(int ac, t_cmd *cmd, char **av)
 {
 	int		n;
 
-	n = ac - 1;
+	n = ac - 2;
 	if (ft_strlen(av[2 + cmd->here_doc]) < 1 && !cmd->env[0])
 		ft_printf("env: ‘’: %s\n", strerror(2));
-	while (2 + cmd->here_doc <= n)
+	while (n >= 2 + cmd->here_doc)
 	{
 		if (ft_strlen(av[n]) < 1)
 		{

@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 19:50:32 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/06 14:03:07 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/06 14:41:56 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,10 @@ int	more_test(char **en, char *cmd, int msg, int env_i)
 {
 	if (!en[0] && msg)
 	{
-		if (!ft_strncmp(cmd, "/dev/stdout", ft_strlen(cmd)) && !env_i)
+		if (env_i && !ft_strncmp(cmd, "/dev/stdout", ft_strlen(cmd)))
 			return (ft_printf("%s: %s: %s\n", SH, cmd, strerror(26)), 1);
 		else if ((!ft_strncmp(cmd, "/dev/stdin", ft_strlen(cmd)))
-			|| (!ft_strncmp(cmd, "/dev/stdout", ft_strlen(cmd)) && env_i))
+			|| (!ft_strncmp(cmd, "/dev/stdout", ft_strlen(cmd))))
 			return (ft_printf("%s: %s: %s\n", SH, cmd, strerror(13)), 1);
 		else
 			return (ft_printf("%s: %s: %s\n", SH, cmd, strerror(2)), 1);
