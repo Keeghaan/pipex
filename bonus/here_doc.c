@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 19:50:32 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/04 20:45:41 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/06 13:40:29 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,14 @@ int	path_not_found(int found, t_cmd *cmd)
 int	more_test(char **en, char *cmd, int msg)
 {
 	if (!en[0] && msg)
-		return (ft_printf("%s: %s: %s\n", SH, cmd, strerror(2)), 1);
+	{
+		if (!ft_strncmp(cmd, "/dev/stdout", ft_strlen(cmd)))
+			return (ft_printf("%s: %s: %s\n", SH, cmd, strerror(26)), 1);
+		else if (!ft_strncmp(cmd, "/dev/stdin", ft_strlen(cmd)))
+			return (ft_printf("%s: %s: %s\n", SH, cmd, strerror(13)), 1);
+		else
+			return (ft_printf("%s: %s: %s\n", SH, cmd, strerror(2)), 1);
+	}
 	if (!ft_strncmp(cmd, "df", ft_strlen(cmd)))
 	{
 		if (msg)

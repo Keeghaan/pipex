@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:21:13 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/06 12:44:49 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/06 13:44:10 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	check_cmd(int n, char *av, t_cmd *cmd)
 	return (0);
 }
 
-static int	split_path(char *av, int err)
+static int	split_path(t_cmd *cmd, char *av)
 {
 	char	**split;
 
@@ -54,37 +54,31 @@ static int	split_path(char *av, int err)
 	{
 		split = ft_split(av, ' ');
 		if (!split)
-		{
-			err++;
 			return (1);
-		}
 		if (ft_strchr(split[0], '/'))
 		{
 			if (access(split[0], F_OK | X_OK) == 0)
 				return (free_file(split), 0);
-			err++;
+			if (cmd->env[0] && !ft_strncmp(split[0]
+					, "/dev/stdout", ft_strlen(split[0])))
+				ft_printf("%s: %s: %s\n", SH, split[0], strerror(26));
+			else if (cmd->env[0])
+				ft_printf("%s: %s: %s\n", SH, split[0], strerror(errno));
 			return (free_file(split), 2);
 		}
 		free_file(split);
-		err++;
 		return (4);
 	}
-	err++;
 	return (3);
 }
 
 static void	check_path_cmd(int ac, t_cmd *cmd, char **av)
 {
 	int		n;
-	int		err;
 
 	n = ac - 1;
-	err = 0;
 	if (ft_strlen(av[2 + cmd->here_doc]) < 1 && !cmd->env[0])
-	{
 		ft_printf("env: ‘’: %s\n", strerror(2));
-		err++;
-	}
 	while (2 + cmd->here_doc <= n)
 	{
 		if (ft_strlen(av[n]) < 1)
@@ -93,10 +87,9 @@ static void	check_path_cmd(int ac, t_cmd *cmd, char **av)
 				|| (cmd->in < 0 && n == 2 + cmd->here_doc))
 				break ;
 			ft_printf("Command '' not found\n");
-			err++;
 		}
 		else
-			split_path(av[n], err);
+			split_path(cmd, av[n]);
 		n--;
 	}
 }

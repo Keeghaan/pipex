@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:28:31 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/05 17:06:56 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/06 13:29:55 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ char	*ret_path(int i, char *cmd, char **en)
 		cmd_path = ft_strjoin(tmp, cmd);
 		free(tmp);
 	}
-	if (access(cmd_path, 0) == 0)
+	if (access(cmd_path, F_OK | X_OK) == 0)
 		return (cmd_path);
 	free(cmd_path);
 	return (NULL);
