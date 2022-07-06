@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:21:13 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/05 18:14:31 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/06 12:17:29 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,8 +87,10 @@ static int	check_path_cmd(int ac, int here_doc, char **av, char **en)
 	}
 	while (2 + here_doc <= n)
 	{
-		if (ft_strlen(av[n]) < 1 && n != 2 + here_doc)
+		if (ft_strlen(av[n]) < 1)
 		{
+			if (!en[0] && n == 2 + here_doc)
+				break ;
 			ft_printf("Command '' not found\n");
 			err++;
 		}
