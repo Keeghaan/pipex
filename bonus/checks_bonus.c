@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:21:13 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/06 12:36:34 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/06 12:44:49 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,23 +73,24 @@ static int	split_path(char *av, int err)
 	return (3);
 }
 
-static void	check_path_cmd(int ac, int here_doc, char **av, char **en)
+static void	check_path_cmd(int ac, t_cmd *cmd, char **av)
 {
 	int		n;
 	int		err;
 
 	n = ac - 1;
 	err = 0;
-	if (ft_strlen(av[2 + here_doc]) < 1 && !en[0])
+	if (ft_strlen(av[2 + cmd->here_doc]) < 1 && !cmd->env[0])
 	{
 		ft_printf("env: ‘’: %s\n", strerror(2));
 		err++;
 	}
-	while (2 + here_doc <= n)
+	while (2 + cmd->here_doc <= n)
 	{
 		if (ft_strlen(av[n]) < 1)
 		{
-			if (!en[0] && n == 2 + here_doc)
+			if ((!cmd->env[0] && n == 2 + cmd->here_doc)
+				|| (cmd->in < 0 && n == 2 + cmd->here_doc))
 				break ;
 			ft_printf("Command '' not found\n");
 			err++;
@@ -108,7 +109,7 @@ int	check_args(int ac, char **av, t_cmd *cmd)
 
 	n = ac - 2;
 	err = 0;
-	check_path_cmd(ac, cmd->here_doc, av, cmd->env);
+	check_path_cmd(ac, cmd, av);
 	both = check_cmd(1, av[ac - 2], cmd);
 	while (2 + cmd->here_doc <= n)
 	{
