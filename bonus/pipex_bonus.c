@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:11:23 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/06 13:09:08 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/06 14:02:24 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ static int	init_struct(t_cmd *cmd, int ac, char **en, char **av)
 	cmd->in = -3;
 	cmd->out = -4;
 	cmd->std_in = 0;
+	cmd->env_i = 0;
 	if (ac < check_heredoc(av, cmd))
 	{
 		if (cmd->here_doc)

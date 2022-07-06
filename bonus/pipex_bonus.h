@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:12:31 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/06 12:34:48 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/06 13:54:19 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ typedef struct s_cmd
 	char	*path;
 	char	**cmd;
 	char	**file;
+	int		env_i;
 	int		**fd;
 	int		no;
 	int		here_doc;
@@ -51,7 +52,7 @@ int		close_fds(t_cmd *cmd);
 int		close_fileno(void);
 int		free_file(char **file);
 int		check_args(int ac, char **av, t_cmd *cmd);
-int		more_test(char **en, char *cmd, int msg);
+int		more_test(char **en, char *cmd, int msg, int env_i);
 int		check_digit(char *cmd);
 int		path_not_found(int found, t_cmd *cmd);
 void	close_pipes(t_cmd *cmd);
@@ -63,6 +64,6 @@ int		check_heredoc(char **av, t_cmd *cmd);
 int		here_doc(char *limiter, t_cmd *cmd);
 int		ft_dup2(t_cmd *cmd, int n);
 int		get_env(t_cmd *cmd, char **envp);
-char	*get_path(char *cmd, char **en, int msg, int n);
+char	*get_path(char *cmd, t_cmd *command, int msg, int n);
 
 #endif

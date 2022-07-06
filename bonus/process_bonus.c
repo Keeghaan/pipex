@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:33:40 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/06 12:34:38 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/06 13:53:59 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static int	ft_process(char **av, t_cmd *cmd, int n)
 			unlink(".here_doc");
 		return (1);
 	}
-	cmd->path = get_path(cmd->cmd[0], cmd->env, 0, 5);
+	cmd->path = get_path(cmd->cmd[0], cmd, 0, 5);
 	if (!cmd->path)
 	{
 		free_file(cmd->cmd);

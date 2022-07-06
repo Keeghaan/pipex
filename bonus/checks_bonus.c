@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:21:13 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/06 13:44:10 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/06 13:53:46 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ int	check_cmd(int n, char *av, t_cmd *cmd)
 		if (!cmd->cmd)
 			return (2);
 		if (n == 1)
-			cmd->path = get_path(cmd->cmd[0], cmd->env, 0, n);
+			cmd->path = get_path(cmd->cmd[0], cmd, 0, n);
 		else
-			cmd->path = get_path(cmd->cmd[0], cmd->env, 1, n);
+			cmd->path = get_path(cmd->cmd[0], cmd, 1, n);
 		if (!cmd->path)
 			return (free_file(cmd->cmd), 4);
 		free(cmd->path);
