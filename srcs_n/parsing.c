@@ -6,39 +6,19 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/03 13:26:32 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/07 17:34:12 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/07 17:36:46 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pipex.h"
 
-static int	check_digit(char *cmd)
-{
-	int	i;
-
-	i = 0;
-	while (cmd[i])
-	{
-		if (ft_isdigit(cmd[i]))
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
 static void	msg_error(int infile, int msg, int n, char *cmd)
 {
-	int	digit;
-
-	digit = check_digit(cmd);
 	if (msg && n > 1 && !ft_strchr(cmd, '/'))
 	{
 		if (infile < 0 && n == 2)
 			return ;
-		if (!digit)
-			ft_printf("Command '%s' not found\n", cmd);
-		else
-			ft_printf("%s: command not found\n", cmd);
+		ft_printf("%s: %s\n", cmd, CMDERR);
 	}
 }
 
