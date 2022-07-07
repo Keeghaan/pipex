@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:21:13 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/07 19:53:37 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/07 21:09:05 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,19 +23,21 @@ static int	split_path(char *av, t_cmd *cmd, int n)
 			return (1);
 		if (ft_strchr(split[0], '/'))
 		{
-			if (access(split[0], F_OK | X_OK) == 0)
+			if (access(split[0], F_OK | R_OK | X_OK) == 0)
 				return (free_file(split), 0);
 			if (ft_strchr(split[0], '/'))
 			{
 				if (cmd->in < 0 && n == 2 + cmd->here_doc)
 					return (free_file(split), 2);
-				ft_printf("i%s: %s: %s\n", SH, split[0], strerror(errno));
+				ft_printf("%s: %s: %s\n", SH, split[0], strerror(errno));
 				return (free_file(split), 2);
 			}
 		}
 		free_file(split);
 		return (4);
 	}
+	else
+		ft_printf("Command '' not found\n");
 	return (3);
 }
 
@@ -43,23 +45,21 @@ static void	check_path_cmd(int ac, t_cmd *cmd, char **av)
 {
 	int		n;
 
-	n = ac - 2;
-	if (ft_strlen(av[2 + cmd->here_doc]) < 1 && !cmd->env[0] && !cmd->env_i)
-		ft_printf("env: ‘’: %s\n", strerror(2));
-	while (n >= 2 + cmd->here_doc)
+	if (!cmd->env[0])
 	{
-		if (ft_strlen(av[n]) < 1)
+		n = 1 + cmd->here_doc;
+		while (++n < ac -1)
 		{
 			if (cmd->in < 0 && n == 2 + cmd->here_doc)
-				break ;
-			if (!cmd->env_i && n != 2 + cmd->here_doc)
-				ft_printf("Command '' not found\n");
-			else if (cmd->env_i)
-				ft_printf("%s: : %s\n", SH, strerror(2));
+				return ;
+			no_env2(av, cmd, n);
 		}
-		else
+	}
+	else
+	{
+		n = ac - 1;
+		while (--n >= 2 + cmd->here_doc)
 			split_path(av[n], cmd, n);
-		n--;
 	}
 }
 

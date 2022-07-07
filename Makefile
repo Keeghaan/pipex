@@ -6,7 +6,7 @@
 #    By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/27 16:43:56 by jcourtoi          #+#    #+#              #
-#    Updated: 2022/07/07 16:12:18 by jcourtoi         ###   ########.fr        #
+#    Updated: 2022/07/07 21:02:52 by jcourtoi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ SRCS =	srcs_n/pipex.c srcs_n/free.c srcs_n/checks.c srcs_n/other_checks.c \
 SRCS_BONUS =	bonus/pipex_bonus.c bonus/free_bonus.c bonus/checks_bonus.c \
 		bonus/process_bonus.c bonus/parsing_bonus.c bonus/here_doc.c \
 	       	utils_n/gnl/get_next_line.c utils_n/gnl/get_next_line_utils.c \
+		bonus/other_check_bonus.c
 
 INC =	pipex.h
 

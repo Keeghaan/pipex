@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:28:31 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/07 19:45:25 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/07 20:50:29 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static int	check_path_cmd2(char *cmd)
 {
 	if (ft_strchr(cmd, '/'))
 	{
-		if (access(cmd, F_OK | X_OK) == 0)
+		if (access(cmd, F_OK | R_OK | X_OK) == 0)
 			return (0);
 		return (1);
 	}
@@ -85,7 +85,7 @@ char	*ret_path(int i, char *cmd, char **en)
 		cmd_path = ft_strjoin(tmp, cmd);
 		free(tmp);
 	}
-	if (access(cmd_path, F_OK | X_OK) == 0)
+	if (access(cmd_path, F_OK | R_OK | X_OK) == 0)
 		return (cmd_path);
 	free(cmd_path);
 	return (NULL);

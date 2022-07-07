@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:12:31 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/07 19:19:15 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/07 21:04:28 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	close_pipes(t_cmd *cmd);
 void	close_files(t_cmd *cmd);
 void	error_exit(char *file, char *err, t_cmd *cmd);
 void	check_file(char *file, t_cmd *cmd);
+void	no_env2(char **av, t_cmd *cmd, int n);
 int		child_process(int n, char **av, char **en, t_cmd *cmd);
 int		check_heredoc(char **av, t_cmd *cmd);
 int		here_doc(char *limiter, t_cmd *cmd);
