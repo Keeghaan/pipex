@@ -6,13 +6,13 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:21:13 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/07 19:21:27 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/07 19:53:37 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-static int	split_path(char *av)
+static int	split_path(char *av, t_cmd *cmd, int n)
 {
 	char	**split;
 
@@ -26,8 +26,12 @@ static int	split_path(char *av)
 			if (access(split[0], F_OK | X_OK) == 0)
 				return (free_file(split), 0);
 			if (ft_strchr(split[0], '/'))
-				ft_printf("%s: %s: %s\n", SH, split[0], strerror(errno));
-			return (free_file(split), 2);
+			{
+				if (cmd->in < 0 && n == 2 + cmd->here_doc)
+					return (free_file(split), 2);
+				ft_printf("i%s: %s: %s\n", SH, split[0], strerror(errno));
+				return (free_file(split), 2);
+			}
 		}
 		free_file(split);
 		return (4);
@@ -54,7 +58,7 @@ static void	check_path_cmd(int ac, t_cmd *cmd, char **av)
 				ft_printf("%s: : %s\n", SH, strerror(2));
 		}
 		else
-			split_path(av[n]);
+			split_path(av[n], cmd, n);
 		n--;
 	}
 }
