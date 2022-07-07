@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/03 13:26:32 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/07 15:08:05 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/07 15:25:07 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,18 +55,18 @@ static int	ft_more_test(char **en, char *cmd, int msg)
 	return (0);
 }
 
-static char	*ret_path(int i, char *cmd, char **en)
+static char	*ret_path(int i, char *cmd, t_cmd *command)
 {
 	char	*cmd_path;
 	char	*tmp;
 
 	tmp = NULL;
 	cmd_path = NULL;
-	if (!check_path_cmd(0, cmd, en, 0))
+	if (!check_path_cmd(0, cmd, command))
 		cmd_path = ft_strdup(cmd);
 	else
 	{
-		tmp = ft_strjoin(en[i], "/");
+		tmp = ft_strjoin(command->env[i], "/");
 		cmd_path = ft_strjoin(tmp, cmd);
 		free(tmp);
 	}
@@ -87,7 +87,7 @@ char	*get_path(char *cmd, t_cmd *command, int msg, int n)
 		return (NULL);
 	while (command->env[i])
 	{
-		cmd_path = ret_path(i, cmd, command->env);
+		cmd_path = ret_path(i, cmd, command);
 		if (cmd_path != NULL)
 			return (cmd_path);
 		i++;
