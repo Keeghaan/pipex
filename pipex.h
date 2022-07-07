@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 18:34:02 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/06 13:03:02 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/07 15:20:19 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef struct s_cmd
 	char	**env;
 	char	*path;
 	char	**cmd;
+	int		env_i;
 	int		fd[2];
 	int		in;
 	int		out;
@@ -49,7 +50,7 @@ int		child_process_two(t_cmd *cmd, char **av);
 int		path_not_found(int found, t_cmd *cmd);
 int		file_ok(char **av);
 int		open_out(t_cmd *cmd, char **av);
-int		check_path_cmd(int i, char *cmd, char **en, int msg);
+int		check_path_cmd(int i, char *cmd, t_cmd *command);
 void	free_process(t_cmd *cmd);
 void	free_file(char **file);
 void	free_parent(t_cmd *cmd);

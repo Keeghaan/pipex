@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 11:17:33 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/06 13:03:29 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/07 15:20:08 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,15 +41,18 @@ int	check_cmd(int n, char *av, t_cmd *cmd)
 	return (0);
 }
 
-int	check_path_cmd(int i, char *cmd, char **en, int msg)
+int	check_path_cmd(int i, char *cmd, t_cmd *command)
 {
 	char	**split;
 
 	if (ft_strlen(cmd) < 1)
 	{
-		if (!en[0] && i == 2 && msg)
+		if (!command->env[0] && i == 2 && !command->env_i)
 			return (ft_printf("env: ‘’: %s\n", strerror(2)), 0);
-		return (ft_printf("Command '' not found\n"), 0);
+		else if (!command->env[0] && command->env_i)
+			return (ft_printf("%s: : %s\n", SH, strerror(2), 0));
+		else if (command->env[0] || (!command->env[0] && !command->env_i))
+			return (ft_printf("Command '' not found\n"), 0);
 	}
 	else
 	{
@@ -67,13 +70,13 @@ int	check_path_cmd(int i, char *cmd, char **en, int msg)
 	return (1);
 }
 
-int	other_check(int ac, char **av, char **en)
+int	other_check(int ac, char **av, t_cmd *cmd)
 {
 	int	check;
 	int	i;
 
 	check = 0;
-	if (!en[0])
+	if (!cmd->env[0])
 		i = 2;
 	else
 		i = 3;
@@ -82,13 +85,13 @@ int	other_check(int ac, char **av, char **en)
 		ft_printf("<./pipex infile cmd1 cmd2 outfile>\n");
 		return (1);
 	}
-	if (check_path_cmd(i, av[i], en, 1))
+	if (check_path_cmd(i, av[i], cmd))
 		check = 1;
-	if (!en[0])
+	if (!cmd->env[0])
 		i++;
 	else
 		i--;
-	if (check_path_cmd(i, av[i], en, 1) || check)
+	if (check_path_cmd(i, av[i], cmd) || check)
 		return (1);
 	return (0);
 }
@@ -100,7 +103,7 @@ int	check_args(int ac, char **av, t_cmd *cmd)
 	int	both;
 
 	n = ac - 2;
-	other_check(ac, av, cmd->env);
+	other_check(ac, av, cmd);
 	both = check_cmd(1, av[ac - 2], cmd);
 	while (n > 1)
 	{

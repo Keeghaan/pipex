@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:28:31 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/06 14:02:38 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/07 14:58:34 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,9 @@ int	get_env(t_cmd *cmd, char **envp)
 
 	i = 0;
 	found = 0;
-	if (!envp[1])
+	if (!envp[0])
 		cmd->env_i = 1;
+	ft_printf("%d\n", cmd->env_i);
 	while (envp[i])
 	{
 		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
