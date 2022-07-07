@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:21:13 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/07 21:09:05 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/07 21:11:08 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static int	no_env(int ac, t_cmd *cmd, char **av, int n)
 {
 	int	err;
 
-	n = 2;
+	n = 2 + cmd->here_doc;
 	if (!(cmd->in < 0 && n == 2 + cmd->here_doc))
 		err = check_cmd(n, av[n], cmd);
 	n = ac - 1;

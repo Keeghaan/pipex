@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/03 13:26:32 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/07 19:29:48 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/07 21:12:07 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static int	ft_more_test(int n, t_cmd *command, char *cmd, int msg)
 {
 	if (msg && ft_strchr(cmd, '/'))
 	{
-		if (access(cmd, F_OK | X_OK) == 0)
+		if (access(cmd, F_OK | R_OK | X_OK) == 0)
 			return (0);
 		ft_printf("%s: %s: %s\n", SH, cmd, strerror(errno));
 	}
@@ -65,7 +65,7 @@ static char	*ret_path(int i, char *cmd, t_cmd *command)
 		cmd_path = ft_strjoin(tmp, cmd);
 		free(tmp);
 	}
-	if (access(cmd_path, F_OK | X_OK) == 0)
+	if (access(cmd_path, F_OK | R_OK | X_OK) == 0)
 		return (cmd_path);
 	free(cmd_path);
 	return (NULL);
