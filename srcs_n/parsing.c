@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/03 13:26:32 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/07 16:21:08 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/07 16:47:06 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,19 @@ static void	msg_error(int infile, int msg, int n, char *cmd)
 	}
 }
 
-static int	ft_more_test(char **en, char *cmd, int msg)
+static int	ft_more_test(int n, t_cmd *command, char *cmd, int msg)
 {
-	if (!en[0] && msg)
+	if (!command->env[0] && msg && command->env_i)
 		return (ft_printf("%s: %s: %s\n", SH, cmd, strerror(2)), 1);
+	else if (!command->env[0] && msg && !command->env_i)
+	{
+		if (command->in > -1 && n == 2)
+			return (ft_printf("env: ‘%s’: %s\n", cmd, strerror(2)));
+		else if (command->in < 0 && n == 2)
+			return (1);
+		else
+			return (ft_printf("Command '%s' not found\n", cmd), 1);
+	}
 	if (!ft_strncmp(cmd, "df", ft_strlen(cmd)))
 	{
 		if (msg)
@@ -85,7 +94,7 @@ char	*get_path(char *cmd, t_cmd *command, int msg, int n)
 	i = 0;
 	if (command->in > -1 || (command->in < 0 && n != 2))
 	{
-		if (ft_more_test(command->env, cmd, msg))
+		if (ft_more_test(n, command, cmd, msg))
 			return (NULL);
 	}
 	while (command->env[i])
