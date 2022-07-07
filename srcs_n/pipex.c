@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 11:01:44 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/07 17:32:21 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/07 17:47:02 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ int	ft_open(int ac, char **av, t_cmd *cmd, char **envp)
 	cmd->in = open(av[1], O_RDONLY);
 	if (cmd->in == -1)
 		ft_printf("%s: %s: %s\n", SH, av[1], strerror(errno));
+	if (ft_strlen(av[1]) < 1 && ft_strlen(av[ac - 1]) < 1)
+		return (close_parent(), -3);
 	if (get_env(cmd, envp))
 		return (-1);
 	err = check_args(ac, av, cmd);
