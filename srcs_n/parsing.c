@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/03 13:26:32 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/07 16:47:06 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/07 17:34:12 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,12 @@ static void	msg_error(int infile, int msg, int n, char *cmd)
 
 static int	ft_more_test(int n, t_cmd *command, char *cmd, int msg)
 {
-	if (!command->env[0] && msg && command->env_i)
-		return (ft_printf("%s: %s: %s\n", SH, cmd, strerror(2)), 1);
+	if (msg && ft_strchr(cmd, '/'))
+	{
+		if (access(cmd, F_OK | X_OK) == 0)
+			return (0);
+		ft_printf("%s: %s: %s\n", SH, cmd, strerror(errno));
+	}
 	else if (!command->env[0] && msg && !command->env_i)
 	{
 		if (command->in > -1 && n == 2)
@@ -55,6 +59,8 @@ static int	ft_more_test(int n, t_cmd *command, char *cmd, int msg)
 		else
 			return (ft_printf("Command '%s' not found\n", cmd), 1);
 	}
+	else if (!command->env[0] && msg && command->env_i)
+		return (ft_printf("%s: %s: %s\n", SH, cmd, strerror(2)), 1);
 	if (!ft_strncmp(cmd, "df", ft_strlen(cmd)))
 	{
 		if (msg)
