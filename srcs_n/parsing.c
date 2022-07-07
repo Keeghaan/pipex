@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/03 13:26:32 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/07 15:25:07 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/07 16:21:08 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,11 @@ char	*get_path(char *cmd, t_cmd *command, int msg, int n)
 
 	cmd_path = NULL;
 	i = 0;
-	if (ft_more_test(command->env, cmd, msg))
-		return (NULL);
+	if (command->in > -1 || (command->in < 0 && n != 2))
+	{
+		if (ft_more_test(command->env, cmd, msg))
+			return (NULL);
+	}
 	while (command->env[i])
 	{
 		cmd_path = ret_path(i, cmd, command);
