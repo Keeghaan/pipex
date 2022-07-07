@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 11:17:33 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/07 16:59:36 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/07 17:42:06 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,19 @@ int	check_args(int ac, char **av, t_cmd *cmd)
 	int	err;
 	int	both;
 
-	n = ac - 2;
 	other_check(ac, av, cmd);
 	both = check_cmd(1, av[ac - 2], cmd);
-	while (n > 1)
+	if (!cmd->env[0])
 	{
-		err = check_cmd(n, av[n], cmd);
-		n--;
+		n = 1;
+		while (++n < ac - 1)
+			err = check_cmd(n, av[n], cmd);
+	}
+	else
+	{
+		n = ac - 1;
+		while (--n > 1)
+			err = check_cmd(n, av[n], cmd);
 	}
 	if ((err && both) || both)
 		return (free_file(cmd->env), 127);
