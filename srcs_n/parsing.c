@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/03 13:26:32 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/07 17:36:46 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/07 19:29:48 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static int	ft_more_test(int n, t_cmd *command, char *cmd, int msg)
 		else if (command->in < 0 && n == 2)
 			return (1);
 		else
-			return (ft_printf("Command '%s' not found\n", cmd), 1);
+			return (ft_printf("%s: %s\n", cmd, CMDERR), 1);
 	}
 	else if (!command->env[0] && msg && command->env_i)
 		return (ft_printf("%s: %s: %s\n", SH, cmd, strerror(2)), 1);
