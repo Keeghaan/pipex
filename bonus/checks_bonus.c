@@ -6,47 +6,13 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:21:13 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/07 15:42:47 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/07 19:21:27 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-int	check_digit(char *cmd)
-{
-	int	i;
-
-	i = 0;
-	while (cmd[i])
-	{
-		if (ft_isdigit(cmd[i]))
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-int	check_cmd(int n, char *av, t_cmd *cmd)
-{
-	if (ft_strlen(av) > 0)
-	{
-		cmd->cmd = ft_split(av, ' ');
-		if (!cmd->cmd)
-			return (2);
-		if (n == 1)
-			cmd->path = get_path(cmd->cmd[0], cmd, 0, n);
-		else
-			cmd->path = get_path(cmd->cmd[0], cmd, 1, n);
-		if (!cmd->path)
-			return (free_file(cmd->cmd), 4);
-		free(cmd->path);
-		free_file(cmd->cmd);
-		return (0);
-	}
-	return (0);
-}
-
-static int	split_path(t_cmd *cmd, char *av)
+static int	split_path(char *av)
 {
 	char	**split;
 
@@ -59,10 +25,7 @@ static int	split_path(t_cmd *cmd, char *av)
 		{
 			if (access(split[0], F_OK | X_OK) == 0)
 				return (free_file(split), 0);
-			if (cmd->env[0] && !ft_strncmp(split[0]
-					, "/dev/stdout", ft_strlen(split[0])))
-				ft_printf("%s: %s: %s\n", SH, split[0], strerror(26));
-			else if (cmd->env[0])
+			if (ft_strchr(split[0], '/'))
 				ft_printf("%s: %s: %s\n", SH, split[0], strerror(errno));
 			return (free_file(split), 2);
 		}
@@ -85,15 +48,42 @@ static void	check_path_cmd(int ac, t_cmd *cmd, char **av)
 		{
 			if (cmd->in < 0 && n == 2 + cmd->here_doc)
 				break ;
-			if (!cmd->env_i)
+			if (!cmd->env_i && n != 2 + cmd->here_doc)
 				ft_printf("Command '' not found\n");
 			else if (cmd->env_i)
 				ft_printf("%s: : %s\n", SH, strerror(2));
 		}
 		else
-			split_path(cmd, av[n]);
+			split_path(av[n]);
 		n--;
 	}
+}
+
+static int	no_env(int ac, t_cmd *cmd, char **av, int n)
+{
+	int	err;
+
+	n = 2;
+	if (!(cmd->in < 0 && n == 2 + cmd->here_doc))
+		err = check_cmd(n, av[n], cmd);
+	n = ac - 1;
+	while (--n >= 3 + cmd->here_doc)
+		err = check_cmd(n, av[n], cmd);
+	return (err);
+}
+
+static int	with_env(int ac, t_cmd *cmd, char **av, int n)
+{
+	int	err;
+
+	n = ac - 1;
+	while (--n >= 2 + cmd->here_doc)
+	{
+		if (cmd->in < 0 && n == 2 + cmd->here_doc)
+			break ;
+		err = check_cmd(n, av[n], cmd);
+	}
+	return (err);
 }
 
 int	check_args(int ac, char **av, t_cmd *cmd)
@@ -102,17 +92,14 @@ int	check_args(int ac, char **av, t_cmd *cmd)
 	int	err;
 	int	both;
 
-	n = ac - 2;
 	err = 0;
+	n = 0;
 	check_path_cmd(ac, cmd, av);
 	both = check_cmd(1, av[ac - 2], cmd);
-	while (2 + cmd->here_doc <= n)
-	{
-		if (cmd->in < 0 && n == 2 + cmd->here_doc)
-			break ;
-		err = check_cmd(n, av[n], cmd);
-		n--;
-	}
+	if (!cmd->env[0])
+		err = no_env(ac, cmd, av, n);
+	else
+		err = with_env(ac, cmd, av, n);
 	if ((err && both) || both)
 	{
 		if (cmd->here_doc)

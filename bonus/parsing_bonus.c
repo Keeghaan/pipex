@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:28:31 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/07 15:29:02 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/07 19:21:54 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,18 +39,24 @@ int	get_env(t_cmd *cmd, char **envp)
 	return (0);
 }
 
-static void	msg_error(int msg, int n, char *cmd)
+int	check_cmd(int n, char *av, t_cmd *cmd)
 {
-	int	digit;
-
-	digit = check_digit(cmd);
-	if (msg && n > 1 && !ft_strchr(cmd, '/'))
+	if (ft_strlen(av) > 0)
 	{
-		if (!digit)
-			ft_printf("Command '%s' not found\n", cmd);
+		cmd->cmd = ft_split(av, ' ');
+		if (!cmd->cmd)
+			return (2);
+		if (n == 1)
+			cmd->path = get_path(cmd->cmd[0], cmd, 0, n);
 		else
-			ft_printf("%s: command not found\n", cmd);
+			cmd->path = get_path(cmd->cmd[0], cmd, 1, n);
+		if (!cmd->path)
+			return (free_file(cmd->cmd), 4);
+		free(cmd->path);
+		free_file(cmd->cmd);
+		return (0);
 	}
+	return (0);
 }
 
 static int	check_path_cmd2(char *cmd)
@@ -92,7 +98,7 @@ char	*get_path(char	*cmd, t_cmd *command, int msg, int n)
 
 	i = 0;
 	ret = NULL;
-	if (more_test(command->env, cmd, msg, command->env_i))
+	if (more_test(command, cmd, msg, n))
 		return (NULL);
 	while (command->env[i])
 	{
@@ -102,6 +108,9 @@ char	*get_path(char	*cmd, t_cmd *command, int msg, int n)
 		i++;
 	}
 	if (command->env[0])
-		msg_error(msg, n, cmd);
+	{
+		if (msg && n > 1 && !ft_strchr(cmd, '/'))
+			ft_printf("%s: command not found\n", cmd);
+	}
 	return (ret);
 }

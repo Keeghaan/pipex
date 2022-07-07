@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:11:23 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/07 15:28:51 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/07 19:22:30 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ static void	ft_pipe(t_cmd *cmd)
 		cmd->fd[i] = malloc(sizeof(int) * 2);
 		if (pipe(cmd->fd[i]) == -1)
 		{
+			ft_printf("%s\n", strerror(errno));
 			close_pipes(cmd);
 			free_parent(cmd);
 			exit(1);

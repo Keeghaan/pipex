@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 19:50:32 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/07 15:32:28 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/07 18:07:18 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,19 +23,21 @@ int	path_not_found(int found, t_cmd *cmd)
 	return (0);
 }
 
-int	more_test(char **en, char *cmd, int msg, int env_i)
+int	more_test(t_cmd *command, char *cmd, int msg, int n)
 {
-	if (!en[0] && msg)
+	if (!command->env[0] && msg)
 	{
-		if (env_i && !ft_strncmp(cmd, "/dev/stdout", ft_strlen(cmd)))
+		if (command->env_i && !ft_strncmp(cmd, "/dev/stdout", ft_strlen(cmd)))
 			return (ft_printf("%s: %s: %s\n", SH, cmd, strerror(26)), 1);
 		else if ((!ft_strncmp(cmd, "/dev/stdin", ft_strlen(cmd)))
 			|| (!ft_strncmp(cmd, "/dev/stdout", ft_strlen(cmd))))
 			return (ft_printf("%s: %s: %s\n", SH, cmd, strerror(13)), 1);
-		else if (env_i)
-			return (ft_printf("%s: %s: %s\n", SH, cmd, strerror(2)), 1);
+		else if (!command->env_i && n == 2 + command->here_doc)
+			return (ft_printf("env: ‘%s’: %s\n", cmd, strerror(2)));
+		else if (!command->env_i && n != 2 + command->here_doc)
+			return (ft_printf("%s: %s\n", cmd, CMDERR));
 		else
-			return (ft_printf("%s: %s: %s\n", SH, cmd, strerror(2)), 1);
+			return (ft_printf("i%s: %s: %s\n", SH, cmd, strerror(2)), 1);
 	}
 	if (!ft_strncmp(cmd, "df", ft_strlen(cmd)))
 	{
