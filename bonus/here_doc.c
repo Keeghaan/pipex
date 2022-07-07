@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 19:50:32 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/07 18:07:18 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/07 19:48:05 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,12 @@ int	more_test(t_cmd *command, char *cmd, int msg, int n)
 {
 	if (!command->env[0] && msg)
 	{
-		if (command->env_i && !ft_strncmp(cmd, "/dev/stdout", ft_strlen(cmd)))
-			return (ft_printf("%s: %s: %s\n", SH, cmd, strerror(26)), 1);
-		else if ((!ft_strncmp(cmd, "/dev/stdin", ft_strlen(cmd)))
-			|| (!ft_strncmp(cmd, "/dev/stdout", ft_strlen(cmd))))
-			return (ft_printf("%s: %s: %s\n", SH, cmd, strerror(13)), 1);
-		else if (!command->env_i && n == 2 + command->here_doc)
+		if (!command->env_i && n == 2 + command->here_doc)
 			return (ft_printf("env: ‘%s’: %s\n", cmd, strerror(2)));
 		else if (!command->env_i && n != 2 + command->here_doc)
 			return (ft_printf("%s: %s\n", cmd, CMDERR));
-		else
-			return (ft_printf("i%s: %s: %s\n", SH, cmd, strerror(2)), 1);
+		else if (!ft_strchr(cmd, '/'))
+			return (ft_printf("%s: %s: %s\n", SH, cmd, strerror(2)), 1);
 	}
 	if (!ft_strncmp(cmd, "df", ft_strlen(cmd)))
 	{
