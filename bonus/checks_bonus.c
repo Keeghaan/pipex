@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:21:13 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/08 13:22:40 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/08 16:37:15 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ static int	with_env(int ac, t_cmd *cmd, char **av, int n)
 	while (--n >= 2 + cmd->here_doc)
 	{
 		if (cmd->in < 0 && n == 2 + cmd->here_doc)
-			break ;
+			n--;
 		err = check_cmd(n, av[n], cmd);
 	}
 	return (err);
