@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 19:50:32 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/07 20:56:09 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/08 13:09:53 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,9 @@ int	more_test(t_cmd *command, char *cmd, int msg, int n)
 {
 	if (!command->env[0] && msg)
 	{
-		if (!command->env_i && n == 2 + command->here_doc)
-			return (ft_printf("env: ‘%s’: %s\n", cmd, strerror(2)));
-		else if (!command->env_i && n != 2 + command->here_doc
+		if (!command->env_i && n != 2 + command->here_doc
 			&& !ft_strchr(cmd, '/'))
 			return (ft_printf("%s: %s\n", cmd, CMDERR));
-		else if (ft_strchr(cmd, '/'))
-			return (ft_printf("%s: %s: %s\n", SH, cmd, strerror(2)), 1);
 	}
 	if (!ft_strncmp(cmd, "df", ft_strlen(cmd)))
 	{

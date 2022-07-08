@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:21:13 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/07 21:11:08 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/08 13:22:40 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,6 @@ static int	split_path(char *av, t_cmd *cmd, int n)
 		free_file(split);
 		return (4);
 	}
-	else
-		ft_printf("Command '' not found\n");
 	return (3);
 }
 
@@ -51,7 +49,8 @@ static void	check_path_cmd(int ac, t_cmd *cmd, char **av)
 		while (++n < ac -1)
 		{
 			if (cmd->in < 0 && n == 2 + cmd->here_doc)
-				return ;
+				n++;
+			split_path(av[n], cmd, n);
 			no_env2(av, cmd, n);
 		}
 	}
