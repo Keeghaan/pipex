@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:28:31 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/08 13:15:13 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/08 14:58:11 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ int	check_cmd(int n, char *av, t_cmd *cmd)
 		free_file(cmd->cmd);
 		return (0);
 	}
+	else if (cmd->env[0])
+		ft_printf("Command '' not found\n");
 	return (0);
 }
 

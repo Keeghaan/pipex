@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:11:23 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/07 19:22:30 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/08 15:06:25 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static int	init_struct(t_cmd *cmd, int ac, char **en, char **av)
 	while (++i < cmd->no)
 		cmd->pid[i] = -2;
 	if (get_env(cmd, en))
-		return (-2);
+		return (free(cmd->pid), -2);
 	return (0);
 }
 
@@ -108,7 +108,7 @@ int	main(int ac, char **av, char **en)
 
 	err = ft_open(ac, av, &cmd, en);
 	if (err < 0)
-		return (free(cmd.pid), close_fileno(), 0);
+		return (close_fileno(), 0);
 	if (err == 127)
 		return (free(cmd.pid), close_fileno(), 127);
 	cmd.fd = malloc(sizeof(int *) * (cmd.no - 1));
