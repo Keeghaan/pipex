@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 21:03:21 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/08 13:22:14 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/08 13:25:30 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,4 +26,6 @@ void	no_env2(char **av, t_cmd *cmd, int n)
 	else if (ft_strlen(av[n]) > 0 && n == 2 + cmd->here_doc
 		&& !cmd->env_i && cmd->in > -1)
 		ft_printf("env: ‘%s’: %s\n", av[n], strerror(2));
+	else if (cmd->env_i && !ft_strchr(av[n], '/'))
+		ft_printf("%s: %s: %s\n", SH, av[n], strerror(2));
 }
