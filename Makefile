@@ -6,13 +6,13 @@
 #    By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/27 16:43:56 by jcourtoi          #+#    #+#              #
-#    Updated: 2022/07/08 16:37:29 by jcourtoi         ###   ########.fr        #
+#    Updated: 2022/07/08 16:38:16 by jcourtoi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = pipex
+NAME = pipex_bonus
 
-BONUS = pipex_bonus
+BONUS = pipex
 
 SRCS =	srcs_n/pipex.c srcs_n/free.c srcs_n/checks.c srcs_n/other_checks.c \
 	srcs_n/parsing.c srcs_n/process.c \

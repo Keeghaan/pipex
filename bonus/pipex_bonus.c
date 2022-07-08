@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:11:23 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/08 15:06:25 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/08 16:52:55 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,9 @@ static int	ft_open(int ac, char **av, t_cmd *cmd, char **en)
 		if (here_doc(av[2], cmd))
 			return (free_file(cmd->env), unlink(".here_doc"), -2);
 		cmd->out = open(av[ac - 1], O_RDWR | O_CREAT | O_APPEND, 0644);
-		return (0);
+		if (cmd->out < 0)
+			return (ft_printf("%s: %s: %s\n"
+					, SH, av[ac - 1], strerror(errno)), 0);
 	}
 	else
 	{
@@ -72,7 +74,8 @@ static int	ft_open(int ac, char **av, t_cmd *cmd, char **en)
 			ft_printf("%s: %s: %s\n", SH, av[1], strerror(errno));
 		cmd->out = open(av[ac - 1], O_RDWR | O_CREAT | O_TRUNC, 0644);
 		if (cmd->out < 0)
-			return (0);
+			return (ft_printf("%s: %s: %s\n"
+					, SH, av[ac - 1], strerror(errno)), 0);
 	}
 	if (check_args(ac, av, cmd) == 127)
 		return (close_files(cmd), 127);
@@ -108,14 +111,14 @@ int	main(int ac, char **av, char **en)
 
 	err = ft_open(ac, av, &cmd, en);
 	if (err < 0)
-		return (close_fileno(), 0);
+		return (close_fileno(), 2);
 	if (err == 127)
 		return (free(cmd.pid), close_fileno(), 127);
 	cmd.fd = malloc(sizeof(int *) * (cmd.no - 1));
 	if (!cmd.fd)
-		return (free_file(cmd.env), close_fileno());
+		return (free_file(cmd.env), close_fileno(), 2);
 	if (pipex(av, en, cmd))
 		return (close_pipes(&cmd), free_parent(&cmd)
-			, close_fileno());
+			, close_fileno(), 2);
 	return (free_parent(&cmd), 0);
 }
