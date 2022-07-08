@@ -6,13 +6,13 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 13:46:07 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/06 13:03:49 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/08 12:40:04 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pipex.h"
 
-int	child_process_one(t_cmd *cmd, char **av)
+int	child_process_one(t_cmd *cmd, char **av, char **envp)
 {
 	if (dup2(cmd->fd[1], STDOUT_FILENO) < 0)
 		return (close_fd(cmd), 1);
@@ -28,7 +28,7 @@ int	child_process_one(t_cmd *cmd, char **av)
 	cmd->path = get_path(cmd->cmd[0], cmd, 0, 5);
 	if (!cmd->path)
 		return (free_file(cmd->cmd), free_process(cmd), 3);
-	execve(cmd->path, cmd->cmd, cmd->env);
+	execve(cmd->path, cmd->cmd, envp);
 	return (free(cmd->path), free_file(cmd->cmd), free_process(cmd), 4);
 }
 
@@ -43,7 +43,7 @@ int	open_out(t_cmd *cmd, char **av)
 	return (0);
 }
 
-int	child_process_two(t_cmd *cmd, char **av)
+int	child_process_two(t_cmd *cmd, char **av, char **envp)
 {
 	if (dup2(cmd->fd[0], STDIN_FILENO) < 0)
 		return (close_fd(cmd), 1);
@@ -59,6 +59,6 @@ int	child_process_two(t_cmd *cmd, char **av)
 	cmd->path = get_path(cmd->cmd[0], cmd, 0, 5);
 	if (!cmd->path)
 		return (free_file(cmd->cmd), free_process(cmd), 3);
-	execve(cmd->path, cmd->cmd, cmd->env);
+	execve(cmd->path, cmd->cmd, envp);
 	return (free(cmd->path), free_file(cmd->cmd), free_process(cmd), 4);
 }

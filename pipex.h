@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 18:34:02 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/07 16:13:25 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/08 12:41:00 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ typedef struct s_cmd
 int		close_files(t_cmd *cmd);
 int		close_fd(t_cmd *cmd);
 int		check_args(int ac, char **av, t_cmd *cmd);
-int		child_process_one(t_cmd *cmd, char **av);
-int		child_process_two(t_cmd *cmd, char **av);
+int		child_process_one(t_cmd *cmd, char **av, char **envp);
+int		child_process_two(t_cmd *cmd, char **av, char **envp);
 int		path_not_found(int found, t_cmd *cmd);
 int		file_ok(char **av);
 int		open_out(t_cmd *cmd, char **av);

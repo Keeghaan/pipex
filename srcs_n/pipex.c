@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 11:01:44 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/07 17:47:02 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/08 12:41:38 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	ft_open(int ac, char **av, t_cmd *cmd, char **envp)
 	return (0);
 }
 
-int	pipex(t_cmd cmd, char **av)
+int	pipex(t_cmd cmd, char **av, char **envp)
 {
 	if (pipe(cmd.fd) < 0)
 		return (free_file(cmd.env), 3);
@@ -70,13 +70,13 @@ int	pipex(t_cmd cmd, char **av)
 		if (cmd.pid1 < 0)
 			return (close_files(&cmd), 4);
 		if (cmd.pid1 == 0)
-			child_process_one(&cmd, av);
+			child_process_one(&cmd, av, envp);
 	}
 	cmd.pid2 = fork();
 	if (cmd.pid2 < 0)
 		return (close_files(&cmd), 5);
 	if (cmd.pid2 == 0)
-		child_process_two(&cmd, av);
+		child_process_two(&cmd, av, envp);
 	close_fd(&cmd);
 	close_files(&cmd);
 	if (cmd.in > -1)
@@ -100,7 +100,7 @@ int	main(int ac, char **av, char **en)
 		return (127);
 	if (err < 0)
 		return (2);
-	if (pipex(cmd, av))
+	if (pipex(cmd, av, en))
 		return (3);
 	return (close_parent(), 0);
 }
