@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 16:08:00 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/07 17:11:00 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/08 17:10:48 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,19 @@
 
 void	empty_cmd(t_cmd *command, int i)
 {	
-	if (!command->env[0] && i == 2 && !command->env_i && command->in > -1)
+	if (!command->env[0] && i == 2 && command->in > -1 && !command->env_i)
 		ft_printf("env: ‘’: %s\n", strerror(2));
-	else if (!command->env[0] && command->env_i)
-	{
-		if (command->in < 0 && i == 2)
-			return ;
-		ft_printf("%s: : %s\n", SH, strerror(2));
-	}
 	else if (command->env[0] || (!command->env[0] && !command->env_i))
 	{
 		if (command->in < 0 && i == 2)
 			return ;
 		ft_printf("Command '' not found\n");
+	}
+	else if (command->env_i)
+	{
+		if (command->in < 0 && i == 2)
+			return ;
+		ft_printf("%s: : %s\n", SH, strerror(2));
 	}
 }
 

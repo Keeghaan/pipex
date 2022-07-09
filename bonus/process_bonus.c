@@ -6,7 +6,7 @@
 /*   By: jcourtoi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 17:33:40 by jcourtoi          #+#    #+#             */
-/*   Updated: 2022/07/07 19:22:05 by jcourtoi         ###   ########.fr       */
+/*   Updated: 2022/07/09 15:30:19 by jcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,22 +26,19 @@ int	ft_dup2(t_cmd *cmd, int n)
 	{
 		if ((dup2(cmd->fd[n][1], STDOUT_FILENO) < 0)
 			|| (dup2(cmd->in, STDIN_FILENO) < 0))
-			return (ft_printf("%s\n", strerror(errno))
-				, close_pipes(cmd), 1);
+			return (close_pipes(cmd), 1);
 	}
 	else if (n == cmd->no - 1)
 	{
 		if ((dup2(cmd->fd[n - 1][0], STDIN_FILENO) < 0)
 			|| (dup2(cmd->out, STDOUT_FILENO) < 0))
-			return (ft_printf("%s\n", strerror(errno))
-				, close_pipes(cmd), 2);
+			return (close_pipes(cmd), 2);
 	}
 	else
 	{
 		if ((dup2(cmd->fd[n - 1][0], STDIN_FILENO) < 0)
 			|| (dup2(cmd->fd[n][1], STDOUT_FILENO) < 0))
-			return (ft_printf("%s\n", strerror(errno))
-				, close_pipes(cmd), 3);
+			return (close_pipes(cmd), 3);
 	}
 	return (close_pipes(cmd), close_files(cmd), 0);
 }
